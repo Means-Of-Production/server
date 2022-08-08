@@ -1,0 +1,2 @@
+const chicken = 5
+

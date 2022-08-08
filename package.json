@@ -1,0 +1,28 @@
+{
+  "name": "@meansofproduction/server",
+  "version": "1.0.0",
+  "description": "Server for the MeansOfProduction library project",
+  "main": "./dist/esm/index.js",
+  "scripts": {
+    "test": "jest",
+    "compile": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "npm run compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Means-Of-Production/server.git"
+  },
+  "author": "Matty Roses",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Means-Of-Production/server/issues"
+  },
+  "homepage": "https://github.com/Means-Of-Production/server#readme",
+  "devDependencies": {
+    "jest": "^28.1.3",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@meansofproduction/domain": "^1.0.0"
+  }
+}
