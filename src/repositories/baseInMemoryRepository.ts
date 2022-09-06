@@ -1,8 +1,9 @@
 import {IRepository} from '@meansofproduction/domain'
 import {ConflictingKeyException, ResourceNotFoundException} from "../valueItems/exceptions";
+import {IEntity} from "@meansofproduction/domain/lib/cjs/entities/IEntity";
 
 
-export abstract class BaseInMemoryRepository<T> implements IRepository<T> {
+export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepository<T> {
     private readonly items: Map<string, T>
 
     protected constructor() {
