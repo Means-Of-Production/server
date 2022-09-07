@@ -9,16 +9,18 @@ export class ThingSearchService implements IThingSearchService {
         this.libraryRepository = libraryRepository
     }
 
-    find(person: Person, searchRequest: SearchRequest): Iterable<ThingTitle> {
+    * find(person: Person, searchRequest: SearchRequest): Iterable<ThingTitle> {
         const libraries = this.libraryRepository.getLibrariesPersonCanUse(person);
 
-        const titles = []
+        const exported = []
         for(const library of libraries) {
             for(const item of library.availableTitles){
-                titles.push(item)
+                const id = item.hash
+                if(exported.indexOf(id) < 0){
+                    exported.push(id)
+                    yield item
+                }
             }
         }
-
-        return titles;
     }
 }
