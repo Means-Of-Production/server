@@ -2,12 +2,33 @@
 ### Do not make changes to this file directly
 
 
-type Link {
-  description: String!
-  id: Int!
-  url: String!
+type Library {
+  administrator: Person!
+  id: String!
+  name: String!
+  type: LibraryTypeEnum!
+}
+
+enum LibraryTypeEnum {
+  BuyNothing
+  Distributed
+  Simple
+}
+
+enum LocationTypeEnum {
+  Distributed
+  Physical
+  Virtual
+}
+
+type Person {
+  emails: [String!]!
+  firstName: String!
+  id: String!
+  lastName: String!
+  middleName: String
 }
 
 type Query {
-  feed: [Link!]!
+  libraries: [Library!]!
 }
