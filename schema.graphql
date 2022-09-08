@@ -10,6 +10,7 @@ type Area {
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
+  items: [Thing]!
   location: Location!
   name: String!
 }
@@ -18,9 +19,14 @@ type Email {
   value: String!
 }
 
+type Lender {
+  id: String!
+}
+
 interface Library {
   administrator: Person!
   id: String!
+  items: [Thing]!
   location: Location!
   name: String!
 }
@@ -64,8 +70,24 @@ type Query {
 type SimpleLibrary implements Library {
   administrator: Person!
   id: String!
+  items: [Thing]!
   location: Location!
   name: String!
+}
+
+type Thing {
+  id: String!
+  imageUrls: [String!]!
+  owner: Lender!
+  storageLocation: Location!
+  title: ThingTitle!
+}
+
+type ThingTitle {
+  description: String
+  isbn: String
+  name: String!
+  upc: String
 }
 
 type VirtualLocation {

@@ -42,6 +42,9 @@ export interface NexusGenObjects {
   Email: { // root type
     value: string; // String!
   }
+  Lender: { // root type
+    id: string; // String!
+  }
   Person: { // root type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
     id: string; // String!
@@ -70,6 +73,19 @@ export interface NexusGenObjects {
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
   }
+  Thing: { // root type
+    id: string; // String!
+    imageUrls: string[]; // [String!]!
+    owner: NexusGenRootTypes['Lender']; // Lender!
+    storageLocation: NexusGenRootTypes['Location']; // Location!
+    title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
+  }
+  ThingTitle: { // root type
+    description?: string | null; // String
+    isbn?: string | null; // String
+    name: string; // String!
+    upc?: string | null; // String
+  }
   VirtualLocation: { // root type
     url?: string | null; // String
   }
@@ -95,11 +111,15 @@ export interface NexusGenFieldTypes {
   DistributedLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
+    items: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
   }
   Email: { // field return type
     value: string; // String!
+  }
+  Lender: { // field return type
+    id: string; // String!
   }
   Person: { // field return type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
@@ -128,8 +148,22 @@ export interface NexusGenFieldTypes {
   SimpleLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
+    items: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
+  }
+  Thing: { // field return type
+    id: string; // String!
+    imageUrls: string[]; // [String!]!
+    owner: NexusGenRootTypes['Lender']; // Lender!
+    storageLocation: NexusGenRootTypes['Location']; // Location!
+    title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
+  }
+  ThingTitle: { // field return type
+    description: string | null; // String
+    isbn: string | null; // String
+    name: string; // String!
+    upc: string | null; // String
   }
   VirtualLocation: { // field return type
     url: string | null; // String
@@ -137,6 +171,7 @@ export interface NexusGenFieldTypes {
   Library: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
+    items: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
   }
@@ -150,11 +185,15 @@ export interface NexusGenFieldTypeNames {
   DistributedLibrary: { // field return type name
     administrator: 'Person'
     id: 'String'
+    items: 'Thing'
     location: 'Location'
     name: 'String'
   }
   Email: { // field return type name
     value: 'String'
+  }
+  Lender: { // field return type name
+    id: 'String'
   }
   Person: { // field return type name
     emails: 'Email'
@@ -183,8 +222,22 @@ export interface NexusGenFieldTypeNames {
   SimpleLibrary: { // field return type name
     administrator: 'Person'
     id: 'String'
+    items: 'Thing'
     location: 'Location'
     name: 'String'
+  }
+  Thing: { // field return type name
+    id: 'String'
+    imageUrls: 'String'
+    owner: 'Lender'
+    storageLocation: 'Location'
+    title: 'ThingTitle'
+  }
+  ThingTitle: { // field return type name
+    description: 'String'
+    isbn: 'String'
+    name: 'String'
+    upc: 'String'
   }
   VirtualLocation: { // field return type name
     url: 'String'
@@ -192,6 +245,7 @@ export interface NexusGenFieldTypeNames {
   Library: { // field return type name
     administrator: 'Person'
     id: 'String'
+    items: 'Thing'
     location: 'Location'
     name: 'String'
   }

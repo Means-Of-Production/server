@@ -18,8 +18,15 @@ export const Library = interfaceType({
             type: Person
         })
         t.nonNull.field("location", {type: Location})
+        t.nonNull.list.field("items", {
+            type: "Thing",
+            resolve(source, args, ctx, info) {
+                return source.getAllThings();
+            }
+        })
     },
     resolveType(entity: ILibrary){
+        // note this matches the NAME, not the object variable name!
         return (entity instanceof DistributedLibrary) ? "DistributedLibrary":
             (entity instanceof  SimpleLibrary) ? "SimpleLibrary": ""
     }
