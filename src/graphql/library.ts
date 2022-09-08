@@ -1,7 +1,7 @@
 import {enumType, extendType, objectType} from "nexus"
 import {Person} from "./person"
-import {libraryRepository} from "../tempDependencyInjection"
 import {fromLibrary} from "../mapper"
+import {ILibraryRepository} from "@meansofproduction/domain"
 
 export const LibraryTypeEnum = enumType({
     name: "LibraryTypeEnum",
@@ -31,6 +31,7 @@ export const LibrariesQuery = extendType({
         t.nonNull.list.nonNull.field("libraries", {
             type: "Library",
             resolve(parent, args, context, info) {
+                const libraryRepository: ILibraryRepository = context.libraryRepository
                 const allLibraries = libraryRepository.getAll()
                 return Array.from(allLibraries).map(l => fromLibrary(l))
             }

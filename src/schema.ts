@@ -7,5 +7,9 @@ export const schema = makeSchema({
     outputs: {
         schema: join(process.cwd(), "schema.graphql"),
         typegen: join(process.cwd(), "nexus-typegen.ts")
+    },
+    contextType: {
+        module: join(__dirname, "./context.ts"),
+        export: "Context"
     }
 })

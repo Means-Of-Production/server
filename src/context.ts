@@ -1,6 +1,6 @@
 import {LibraryRepository} from "./repositories/libraryRepository"
 import {
-    EmailAddress,
+    EmailAddress, ILibraryRepository,
     MoneyFactory,
     Person,
     PersonName,
@@ -12,7 +12,7 @@ import {
 
 const moneyFactory = new MoneyFactory()
 
-export const libraryRepository = new LibraryRepository(
+const libraryRepository = new LibraryRepository(
     [
         new SimpleLibrary(
             "testLib1",
@@ -27,3 +27,11 @@ export const libraryRepository = new LibraryRepository(
         )
     ]
 )
+
+export interface Context{
+    libraryRepository: ILibraryRepository
+}
+
+export const context = {
+    libraryRepository
+}
