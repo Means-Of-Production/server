@@ -17,7 +17,6 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
-  LibraryTypeEnum: "BuyNothing" | "Distributed" | "Simple"
   LocationTypeEnum: "Distributed" | "Physical" | "Virtual"
 }
 
@@ -30,67 +29,159 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Library: { // root type
+  Area: { // root type
+    center: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    distance: number; // Float!
+  }
+  DistributedLibrary: { // root type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
+    location: NexusGenRootTypes['Area']; // Area!
     name: string; // String!
-    type: NexusGenEnums['LibraryTypeEnum']; // LibraryTypeEnum!
+  }
+  Email: { // root type
+    value: string; // String!
   }
   Person: { // root type
-    emails: string[]; // [String!]!
-    firstName: string; // String!
+    emails: NexusGenRootTypes['Email'][]; // [Email!]!
     id: string; // String!
+    name: NexusGenRootTypes['PersonName']; // PersonName!
+  }
+  PersonName: { // root type
+    firstName: string; // String!
     lastName: string; // String!
     middleName?: string | null; // String
   }
+  PhysicalLocation: { // root type
+    apartment?: string | null; // String
+    city?: string | null; // String
+    country?: string | null; // String
+    latitude?: string | null; // String
+    longitude?: string | null; // String
+    state?: string | null; // String
+    streetAddress?: string | null; // String
+    streetName?: string | null; // String
+    zipcode?: string | null; // String
+  }
   Query: {};
+  SimpleLibrary: { // root type
+    administrator: NexusGenRootTypes['Person']; // Person!
+    id: string; // String!
+    location: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenInterfaces {
+  Library: NexusGenRootTypes['DistributedLibrary'] | NexusGenRootTypes['SimpleLibrary'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
-  Library: { // field return type
+  Area: { // field return type
+    center: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    distance: number; // Float!
+  }
+  DistributedLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
+    location: NexusGenRootTypes['Area']; // Area!
     name: string; // String!
-    type: NexusGenEnums['LibraryTypeEnum']; // LibraryTypeEnum!
+  }
+  Email: { // field return type
+    value: string; // String!
   }
   Person: { // field return type
-    emails: string[]; // [String!]!
-    firstName: string; // String!
+    emails: NexusGenRootTypes['Email'][]; // [Email!]!
     id: string; // String!
+    name: NexusGenRootTypes['PersonName']; // PersonName!
+  }
+  PersonName: { // field return type
+    firstName: string; // String!
     lastName: string; // String!
     middleName: string | null; // String
+  }
+  PhysicalLocation: { // field return type
+    apartment: string | null; // String
+    city: string | null; // String
+    country: string | null; // String
+    latitude: string | null; // String
+    longitude: string | null; // String
+    state: string | null; // String
+    streetAddress: string | null; // String
+    streetName: string | null; // String
+    zipcode: string | null; // String
   }
   Query: { // field return type
     libraries: NexusGenRootTypes['Library'][]; // [Library!]!
   }
+  SimpleLibrary: { // field return type
+    administrator: NexusGenRootTypes['Person']; // Person!
+    id: string; // String!
+    location: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    name: string; // String!
+  }
+  Library: { // field return type
+    administrator: NexusGenRootTypes['Person']; // Person!
+    id: string; // String!
+    name: string; // String!
+  }
 }
 
 export interface NexusGenFieldTypeNames {
+  Area: { // field return type name
+    center: 'PhysicalLocation'
+    distance: 'Float'
+  }
+  DistributedLibrary: { // field return type name
+    administrator: 'Person'
+    id: 'String'
+    location: 'Area'
+    name: 'String'
+  }
+  Email: { // field return type name
+    value: 'String'
+  }
+  Person: { // field return type name
+    emails: 'Email'
+    id: 'String'
+    name: 'PersonName'
+  }
+  PersonName: { // field return type name
+    firstName: 'String'
+    lastName: 'String'
+    middleName: 'String'
+  }
+  PhysicalLocation: { // field return type name
+    apartment: 'String'
+    city: 'String'
+    country: 'String'
+    latitude: 'String'
+    longitude: 'String'
+    state: 'String'
+    streetAddress: 'String'
+    streetName: 'String'
+    zipcode: 'String'
+  }
+  Query: { // field return type name
+    libraries: 'Library'
+  }
+  SimpleLibrary: { // field return type name
+    administrator: 'Person'
+    id: 'String'
+    location: 'PhysicalLocation'
+    name: 'String'
+  }
   Library: { // field return type name
     administrator: 'Person'
     id: 'String'
     name: 'String'
-    type: 'LibraryTypeEnum'
-  }
-  Person: { // field return type name
-    emails: 'String'
-    firstName: 'String'
-    id: 'String'
-    lastName: 'String'
-    middleName: 'String'
-  }
-  Query: { // field return type name
-    libraries: 'Library'
   }
 }
 
@@ -98,9 +189,12 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  Library: "DistributedLibrary" | "SimpleLibrary"
 }
 
 export interface NexusGenTypeInterfaces {
+  DistributedLibrary: "Library"
+  SimpleLibrary: "Library"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -109,7 +203,7 @@ export type NexusGenInputNames = never;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -117,7 +211,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "Library";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {

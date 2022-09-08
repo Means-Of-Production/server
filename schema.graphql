@@ -2,17 +2,26 @@
 ### Do not make changes to this file directly
 
 
-type Library {
+type Area {
+  center: PhysicalLocation!
+  distance: Float!
+}
+
+type DistributedLibrary implements Library {
+  administrator: Person!
+  id: String!
+  location: Area!
+  name: String!
+}
+
+type Email {
+  value: String!
+}
+
+interface Library {
   administrator: Person!
   id: String!
   name: String!
-  type: LibraryTypeEnum!
-}
-
-enum LibraryTypeEnum {
-  BuyNothing
-  Distributed
-  Simple
 }
 
 enum LocationTypeEnum {
@@ -22,13 +31,36 @@ enum LocationTypeEnum {
 }
 
 type Person {
-  emails: [String!]!
-  firstName: String!
+  emails: [Email!]!
   id: String!
+  name: PersonName!
+}
+
+type PersonName {
+  firstName: String!
   lastName: String!
   middleName: String
 }
 
+type PhysicalLocation {
+  apartment: String
+  city: String
+  country: String
+  latitude: String
+  longitude: String
+  state: String
+  streetAddress: String
+  streetName: String
+  zipcode: String
+}
+
 type Query {
   libraries: [Library!]!
+}
+
+type SimpleLibrary implements Library {
+  administrator: Person!
+  id: String!
+  location: PhysicalLocation!
+  name: String!
 }

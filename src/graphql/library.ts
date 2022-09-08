@@ -1,28 +1,43 @@
-import {enumType, extendType, objectType} from "nexus"
+import {enumType, extendType, interfaceType, objectType} from "nexus"
 import {Person} from "./person"
-import {fromLibrary} from "../mapper"
-import {ILibraryRepository} from "@meansofproduction/domain"
+import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
+import {Area, PhysicalLocation} from "./location"
 
-export const LibraryTypeEnum = enumType({
-    name: "LibraryTypeEnum",
-    members: ["Simple", "Distributed", "BuyNothing"]
-})
 
 export const LocationType = enumType({
     name: "LocationTypeEnum",
     members: ["Physical", "Distributed", "Virtual"]
 })
 
-export const Library = objectType({
+export const Library = interfaceType({
     name: "Library",
     definition(t) {
         t.nonNull.string("id")
-        t.nonNull.field("type", {type: LibraryTypeEnum})
         t.nonNull.string("name")
         t.nonNull.field("administrator", {
             type: Person
         })
+    },
+    resolveType(entity: ILibrary){
+        return (entity instanceof DistributedLibrary) ? "DistributedLibrary":
+            (entity instanceof  SimpleLibrary) ? "SimpleLibrary": ""
     }
+})
+
+export const SimpleLibraryObj = objectType({
+    name: "SimpleLibrary",
+    definition(t) {
+        t.implements("Library")
+        t.nonNull.field("location", { type: PhysicalLocation})
+    }
+})
+
+export const DistributedLibraryObj = objectType({
+    name: "DistributedLibrary",
+    definition(t) {
+        t.implements("Library")
+        t.nonNull.field("location", {type: Area})
+    },
 })
 
 export const LibrariesQuery = extendType({
@@ -32,8 +47,7 @@ export const LibrariesQuery = extendType({
             type: "Library",
             resolve(parent, args, context, info) {
                 const libraryRepository: ILibraryRepository = context.libraryRepository
-                const allLibraries = libraryRepository.getAll()
-                return Array.from(allLibraries).map(l => fromLibrary(l))
+                return libraryRepository.getAll()
             }
         })
     }
