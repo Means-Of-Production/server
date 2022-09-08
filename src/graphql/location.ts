@@ -1,6 +1,15 @@
 import {objectType, unionType} from "nexus"
+import {ILocation, PhysicalArea, PhysicalLocation} from "@meansofproduction/domain"
 
-export const PhysicalLocation = objectType({
+export const VirtualLocation = objectType({
+    name: "VirtualLocation",
+    definition(t) {
+        t.nullable.string("url")
+    }
+})
+
+
+export const PhysicalLocationObj = objectType({
     name: "PhysicalLocation",
     definition(t) {
         t.nullable.string("latitude")
@@ -15,17 +24,23 @@ export const PhysicalLocation = objectType({
     }
 })
 
-export const Area = objectType({
+
+export const PhysicalAreaObj = objectType({
     name: "Area",
     definition(t) {
-        t.nonNull.field("center", { type: PhysicalLocation})
+        t.nonNull.field("center", { type: PhysicalLocationObj})
         t.nonNull.float("distance")
     }
 })
+
 
 export const Location = unionType({
     name: "Location",
     definition(t) {
         t.members("PhysicalLocation", "Area")
+    },
+    resolveType(location: ILocation){
+        return location instanceof PhysicalArea ? "PhysicalArea"
+            : location instanceof PhysicalLocation? "PhysicalLocation": "VirtualLocation"
     }
 })

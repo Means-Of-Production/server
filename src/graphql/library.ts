@@ -1,7 +1,7 @@
 import {enumType, extendType, interfaceType, objectType} from "nexus"
 import {Person} from "./person"
 import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
-import {Area, PhysicalLocation} from "./location"
+import {Location} from "./location"
 
 
 export const LocationType = enumType({
@@ -17,6 +17,7 @@ export const Library = interfaceType({
         t.nonNull.field("administrator", {
             type: Person
         })
+        t.nonNull.field("location", {type: Location})
     },
     resolveType(entity: ILibrary){
         return (entity instanceof DistributedLibrary) ? "DistributedLibrary":
@@ -24,11 +25,11 @@ export const Library = interfaceType({
     }
 })
 
+
 export const SimpleLibraryObj = objectType({
     name: "SimpleLibrary",
     definition(t) {
         t.implements("Library")
-        t.nonNull.field("location", { type: PhysicalLocation})
     }
 })
 
@@ -36,7 +37,6 @@ export const DistributedLibraryObj = objectType({
     name: "DistributedLibrary",
     definition(t) {
         t.implements("Library")
-        t.nonNull.field("location", {type: Area})
     },
 })
 

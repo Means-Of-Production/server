@@ -10,7 +10,7 @@ type Area {
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
-  location: Area!
+  location: Location!
   name: String!
 }
 
@@ -21,8 +21,11 @@ type Email {
 interface Library {
   administrator: Person!
   id: String!
+  location: Location!
   name: String!
 }
+
+union Location = Area | PhysicalLocation
 
 enum LocationTypeEnum {
   Distributed
@@ -61,6 +64,10 @@ type Query {
 type SimpleLibrary implements Library {
   administrator: Person!
   id: String!
-  location: PhysicalLocation!
+  location: Location!
   name: String!
+}
+
+type VirtualLocation {
+  url: String
 }
