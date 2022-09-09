@@ -1,12 +1,14 @@
 {
     "compilerOptions": {
-        "module": "ES2020",
-        "target": "es6",
+        "module": "commonjs",
+        "target": "ES2018",
+        "lib": ["esnext"],
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "declaration": true,
         "outDir": "./dist/esm",
         "experimentalDecorators": true,
+        "sourceMap": true,
         "strict": true
     },
     "include": [
