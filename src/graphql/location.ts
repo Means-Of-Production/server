@@ -26,9 +26,9 @@ export const PhysicalLocationObj = objectType({
 
 
 export const PhysicalAreaObj = objectType({
-    name: "Area",
+    name: "PhysicalArea",
     definition(t) {
-        t.nonNull.field("center", { type: PhysicalLocationObj})
+        t.nonNull.field("centerPoint", { type: PhysicalLocationObj})
         t.nonNull.float("distance")
     }
 })
@@ -37,7 +37,7 @@ export const PhysicalAreaObj = objectType({
 export const Location = unionType({
     name: "Location",
     definition(t) {
-        t.members("PhysicalLocation", "Area")
+        t.members("PhysicalLocation", "PhysicalArea")
     },
     resolveType(location: ILocation){
         return location instanceof PhysicalArea ? "PhysicalArea"

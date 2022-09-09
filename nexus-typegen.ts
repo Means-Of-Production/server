@@ -29,10 +29,6 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
-  Area: { // root type
-    center: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
-    distance: number; // Float!
-  }
   DistributedLibrary: { // root type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
@@ -54,6 +50,10 @@ export interface NexusGenObjects {
     firstName: string; // String!
     lastName: string; // String!
     middleName?: string | null; // String
+  }
+  PhysicalArea: { // root type
+    centerPoint: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    distance: number; // Float!
   }
   PhysicalLocation: { // root type
     apartment?: string | null; // String
@@ -96,7 +96,7 @@ export interface NexusGenInterfaces {
 }
 
 export interface NexusGenUnions {
-  Location: NexusGenRootTypes['Area'] | NexusGenRootTypes['PhysicalLocation'];
+  Location: NexusGenRootTypes['PhysicalArea'] | NexusGenRootTypes['PhysicalLocation'];
 }
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
@@ -104,10 +104,6 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenU
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
-  Area: { // field return type
-    center: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
-    distance: number; // Float!
-  }
   DistributedLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
@@ -130,6 +126,10 @@ export interface NexusGenFieldTypes {
     firstName: string; // String!
     lastName: string; // String!
     middleName: string | null; // String
+  }
+  PhysicalArea: { // field return type
+    centerPoint: NexusGenRootTypes['PhysicalLocation']; // PhysicalLocation!
+    distance: number; // Float!
   }
   PhysicalLocation: { // field return type
     apartment: string | null; // String
@@ -178,10 +178,6 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
-  Area: { // field return type name
-    center: 'PhysicalLocation'
-    distance: 'Float'
-  }
   DistributedLibrary: { // field return type name
     administrator: 'Person'
     id: 'String'
@@ -204,6 +200,10 @@ export interface NexusGenFieldTypeNames {
     firstName: 'String'
     lastName: 'String'
     middleName: 'String'
+  }
+  PhysicalArea: { // field return type name
+    centerPoint: 'PhysicalLocation'
+    distance: 'Float'
   }
   PhysicalLocation: { // field return type name
     apartment: 'String'
@@ -255,7 +255,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Location: "Area" | "PhysicalLocation"
+  Location: "PhysicalArea" | "PhysicalLocation"
   Library: "DistributedLibrary" | "SimpleLibrary"
 }
 

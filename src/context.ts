@@ -1,38 +1,38 @@
 import {LibraryRepository} from "./repositories/libraryRepository"
 import {
+    DistributedLibrary,
     EmailAddress,
     ILibraryRepository,
     MoneyFactory,
     Person,
-    PersonName,
+    PersonName, PhysicalArea,
     PhysicalLocation,
     SimpleLibrary,
     SimpleTimeBasedFeeSchedule,
     Thing,
     ThingStatus,
-    ThingTitle,
+    ThingTitle, TimeInterval,
     USDMoney,
-    WaitingListFactory
+    WaitingListFactory,
+    Distance
 } from "@meansofproduction/domain"
 
 const moneyFactory = new MoneyFactory()
+
+const waitingListFactory =  new WaitingListFactory(false)
+
+const feeSchedule = new SimpleTimeBasedFeeSchedule(new USDMoney(10), moneyFactory)
 
 const simpleLibrary =         new SimpleLibrary(
     "testLib1",
     "testLibrary",
     new Person("admin", new PersonName("Testy", "McTesterson"), [new EmailAddress("testy@test.com")]),
     new PhysicalLocation(0, 0),
-    new WaitingListFactory(false),
+    waitingListFactory,
     new USDMoney(100),
     [],
     moneyFactory,
-    new SimpleTimeBasedFeeSchedule(new USDMoney(10), moneyFactory)
-)
-
-const libraryRepository = new LibraryRepository(
-    [
-        simpleLibrary
-    ]
+    feeSchedule
 )
 
 const tableSaw = new Thing(
@@ -51,9 +51,31 @@ const tableSaw = new Thing(
 )
 simpleLibrary.addItem(tableSaw)
 
+const distributedLibrary = new DistributedLibrary(
+    "MOPTestDistLib1",
+    "Means of Production Test Library",
+    new Person("admin", new PersonName("Testy", "McTesterson"), [new EmailAddress("testy@test.com")]),
+    new USDMoney(100),
+    waitingListFactory,
+    [],
+    feeSchedule,
+    moneyFactory,
+    TimeInterval.fromDays(14),
+    new PhysicalArea(
+        new PhysicalLocation(0, 0),
+        Distance.fromKilometers(10)
+    )
+)
 export interface Context{
     libraryRepository: ILibraryRepository
 }
+
+const libraryRepository = new LibraryRepository(
+    [
+        simpleLibrary,
+        distributedLibrary
+    ]
+)
 
 export const context = {
     libraryRepository

@@ -2,11 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type Area {
-  center: PhysicalLocation!
-  distance: Float!
-}
-
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
@@ -31,7 +26,7 @@ interface Library {
   name: String!
 }
 
-union Location = Area | PhysicalLocation
+union Location = PhysicalArea | PhysicalLocation
 
 enum LocationTypeEnum {
   Distributed
@@ -49,6 +44,11 @@ type PersonName {
   firstName: String!
   lastName: String!
   middleName: String
+}
+
+type PhysicalArea {
+  centerPoint: PhysicalLocation!
+  distance: Float!
 }
 
 type PhysicalLocation {
