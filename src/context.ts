@@ -1,29 +1,32 @@
 import {LibraryRepository} from "./repositories/libraryRepository"
 import {
+    Distance,
     DistributedLibrary,
     EmailAddress,
     ILibraryRepository,
+    IndividualDistributedLender,
     MoneyFactory,
     Person,
-    PersonName, PhysicalArea,
+    PersonName,
+    PhysicalArea,
     PhysicalLocation,
     SimpleLibrary,
     SimpleTimeBasedFeeSchedule,
     Thing,
     ThingStatus,
-    ThingTitle, TimeInterval,
+    ThingTitle,
+    TimeInterval,
     USDMoney,
-    WaitingListFactory,
-    Distance
+    WaitingListFactory
 } from "@meansofproduction/domain"
 
 const moneyFactory = new MoneyFactory()
 
-const waitingListFactory =  new WaitingListFactory(false)
+const waitingListFactory = new WaitingListFactory(false)
 
 const feeSchedule = new SimpleTimeBasedFeeSchedule(new USDMoney(10), moneyFactory)
 
-const simpleLibrary =         new SimpleLibrary(
+const simpleLibrary = new SimpleLibrary(
     "testLib1",
     "testLibrary",
     new Person("admin", new PersonName("Testy", "McTesterson"), [new EmailAddress("testy@test.com")]),
@@ -35,13 +38,15 @@ const simpleLibrary =         new SimpleLibrary(
     feeSchedule
 )
 
+const tableSawTitle = new ThingTitle(
+    "Ryobi Table Saw",
+    "",
+    "295848321"
+)
+
 const tableSaw = new Thing(
     "847s77fhd",
-    new ThingTitle(
-        "Ryobi Table Saw",
-        "",
-        "295848321"
-    ),
+    tableSawTitle,
     simpleLibrary.location,
     simpleLibrary,
     ThingStatus.READY,
@@ -50,6 +55,7 @@ const tableSaw = new Thing(
     null,
 )
 simpleLibrary.addItem(tableSaw)
+
 
 const distributedLibrary = new DistributedLibrary(
     "MOPTestDistLib1",
@@ -66,7 +72,23 @@ const distributedLibrary = new DistributedLibrary(
         Distance.fromKilometers(10)
     )
 )
-export interface Context{
+const bob = new Person("bob", new PersonName("Bob", "Good", "Person"), [new EmailAddress("bob@test.com")])
+const bobLender = new IndividualDistributedLender("bobDist", bob, bob.emails, [], new PhysicalLocation(10, 10))
+
+const bobsSaw = new Thing(
+    "bobsSaw",
+    tableSawTitle,
+    new PhysicalLocation(0, 0),
+    bobLender,
+    ThingStatus.BORROWED,
+    "my old saw",
+    [],
+    null
+)
+bobLender.addItem(bobsSaw)
+distributedLibrary.addLender(bobLender)
+
+export interface Context {
     libraryRepository: ILibraryRepository
 }
 
