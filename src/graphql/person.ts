@@ -1,4 +1,4 @@
-import {objectType} from "nexus"
+import {inputObjectType, objectType} from "nexus"
 
 export const Email = objectType({
     name: "Email",
@@ -22,5 +22,12 @@ export const Person = objectType({
         t.nonNull.string("id")
         t.nonNull.field("name", {type:PersonName})
         t.nonNull.list.nonNull.field("emails", {type: Email})
+    }
+})
+
+export const PersonInput = inputObjectType({
+    name: "PersonInput",
+    definition(t) {
+        t.nonNull.string("id")
     }
 })

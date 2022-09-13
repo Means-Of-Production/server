@@ -2,6 +2,14 @@
 ### Do not make changes to this file directly
 
 
+enum BorrowerVerificationFlags {
+  CURRENT_ADDRESS_VERIFIED
+  EMAIL_VERIFIED
+  ID_SCANNED
+  ITEM_RFID_CHIP
+  PHONE_NUMBER
+}
+
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
@@ -26,6 +34,11 @@ interface Library {
   name: String!
 }
 
+type LibrarySearchResult {
+  library: Library!
+  things: [Thing]!
+}
+
 union Location = PhysicalArea | PhysicalLocation
 
 enum LocationTypeEnum {
@@ -38,6 +51,10 @@ type Person {
   emails: [Email!]!
   id: String!
   name: PersonName!
+}
+
+input PersonInput {
+  id: String!
 }
 
 type PersonName {
@@ -65,6 +82,7 @@ type PhysicalLocation {
 
 type Query {
   libraries: [Library!]!
+  titleSearchResults(person: PersonInput!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
 }
 
 type SimpleLibrary implements Library {
@@ -79,8 +97,17 @@ type Thing {
   id: String!
   imageUrls: [String!]!
   owner: Lender!
+  requiredBorrowerFlags: [BorrowerVerificationFlags!]!
+  status: ThingStatus!
   storageLocation: Location!
   title: ThingTitle!
+}
+
+enum ThingStatus {
+  BORROWED
+  DAMAGED
+  READY
+  RESERVED
 }
 
 type ThingTitle {
@@ -88,6 +115,15 @@ type ThingTitle {
   isbn: String
   name: String!
   upc: String
+}
+
+input TitleSearchRequest {
+  searchText: String
+}
+
+type TitleSearchResult {
+  libraryResults: [LibrarySearchResult]!
+  title: ThingTitle!
 }
 
 type VirtualLocation {

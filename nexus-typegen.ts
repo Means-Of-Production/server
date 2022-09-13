@@ -14,10 +14,18 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  PersonInput: { // input type
+    id: string; // String!
+  }
+  TitleSearchRequest: { // input type
+    searchText?: string | null; // String
+  }
 }
 
 export interface NexusGenEnums {
+  BorrowerVerificationFlags: "CURRENT_ADDRESS_VERIFIED" | "EMAIL_VERIFIED" | "ID_SCANNED" | "ITEM_RFID_CHIP" | "PHONE_NUMBER"
   LocationTypeEnum: "Distributed" | "Physical" | "Virtual"
+  ThingStatus: "BORROWED" | "DAMAGED" | "READY" | "RESERVED"
 }
 
 export interface NexusGenScalars {
@@ -40,6 +48,10 @@ export interface NexusGenObjects {
   }
   Lender: { // root type
     id: string; // String!
+  }
+  LibrarySearchResult: { // root type
+    library: NexusGenRootTypes['Library']; // Library!
+    things: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
   }
   Person: { // root type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
@@ -86,6 +98,10 @@ export interface NexusGenObjects {
     name: string; // String!
     upc?: string | null; // String
   }
+  TitleSearchResult: { // root type
+    libraryResults: Array<NexusGenRootTypes['LibrarySearchResult'] | null>; // [LibrarySearchResult]!
+    title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
+  }
   VirtualLocation: { // root type
     url?: string | null; // String
   }
@@ -117,6 +133,10 @@ export interface NexusGenFieldTypes {
   Lender: { // field return type
     id: string; // String!
   }
+  LibrarySearchResult: { // field return type
+    library: NexusGenRootTypes['Library']; // Library!
+    things: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
+  }
   Person: { // field return type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
     id: string; // String!
@@ -144,6 +164,7 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     libraries: NexusGenRootTypes['Library'][]; // [Library!]!
+    titleSearchResults: NexusGenRootTypes['TitleSearchResult'][]; // [TitleSearchResult!]!
   }
   SimpleLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
@@ -156,6 +177,8 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     imageUrls: string[]; // [String!]!
     owner: NexusGenRootTypes['Lender']; // Lender!
+    requiredBorrowerFlags: NexusGenEnums['BorrowerVerificationFlags'][]; // [BorrowerVerificationFlags!]!
+    status: NexusGenEnums['ThingStatus']; // ThingStatus!
     storageLocation: NexusGenRootTypes['Location']; // Location!
     title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
   }
@@ -164,6 +187,10 @@ export interface NexusGenFieldTypes {
     isbn: string | null; // String
     name: string; // String!
     upc: string | null; // String
+  }
+  TitleSearchResult: { // field return type
+    libraryResults: Array<NexusGenRootTypes['LibrarySearchResult'] | null>; // [LibrarySearchResult]!
+    title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
   }
   VirtualLocation: { // field return type
     url: string | null; // String
@@ -190,6 +217,10 @@ export interface NexusGenFieldTypeNames {
   }
   Lender: { // field return type name
     id: 'String'
+  }
+  LibrarySearchResult: { // field return type name
+    library: 'Library'
+    things: 'Thing'
   }
   Person: { // field return type name
     emails: 'Email'
@@ -218,6 +249,7 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     libraries: 'Library'
+    titleSearchResults: 'TitleSearchResult'
   }
   SimpleLibrary: { // field return type name
     administrator: 'Person'
@@ -230,6 +262,8 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     imageUrls: 'String'
     owner: 'Lender'
+    requiredBorrowerFlags: 'BorrowerVerificationFlags'
+    status: 'ThingStatus'
     storageLocation: 'Location'
     title: 'ThingTitle'
   }
@@ -238,6 +272,10 @@ export interface NexusGenFieldTypeNames {
     isbn: 'String'
     name: 'String'
     upc: 'String'
+  }
+  TitleSearchResult: { // field return type name
+    libraryResults: 'LibrarySearchResult'
+    title: 'ThingTitle'
   }
   VirtualLocation: { // field return type name
     url: 'String'
@@ -252,6 +290,12 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    titleSearchResults: { // args
+      person: NexusGenInputs['PersonInput']; // PersonInput!
+      searchRequest?: NexusGenInputs['TitleSearchRequest'] | null; // TitleSearchRequest
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
@@ -266,7 +310,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
