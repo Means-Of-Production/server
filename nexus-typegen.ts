@@ -23,7 +23,9 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  BorrowerVerificationFlags: "CURRENT_ADDRESS_VERIFIED" | "EMAIL_VERIFIED" | "ID_SCANNED" | "ITEM_RFID_CHIP" | "PHONE_NUMBER"
   LocationTypeEnum: "Distributed" | "Physical" | "Virtual"
+  ThingStatus: "BORROWED" | "DAMAGED" | "READY" | "RESERVED"
 }
 
 export interface NexusGenScalars {
@@ -175,6 +177,8 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     imageUrls: string[]; // [String!]!
     owner: NexusGenRootTypes['Lender']; // Lender!
+    requiredBorrowerFlags: NexusGenEnums['BorrowerVerificationFlags'][]; // [BorrowerVerificationFlags!]!
+    status: NexusGenEnums['ThingStatus']; // ThingStatus!
     storageLocation: NexusGenRootTypes['Location']; // Location!
     title: NexusGenRootTypes['ThingTitle']; // ThingTitle!
   }
@@ -258,6 +262,8 @@ export interface NexusGenFieldTypeNames {
     id: 'String'
     imageUrls: 'String'
     owner: 'Lender'
+    requiredBorrowerFlags: 'BorrowerVerificationFlags'
+    status: 'ThingStatus'
     storageLocation: 'Location'
     title: 'ThingTitle'
   }

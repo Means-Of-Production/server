@@ -2,6 +2,14 @@
 ### Do not make changes to this file directly
 
 
+enum BorrowerVerificationFlags {
+  CURRENT_ADDRESS_VERIFIED
+  EMAIL_VERIFIED
+  ID_SCANNED
+  ITEM_RFID_CHIP
+  PHONE_NUMBER
+}
+
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
@@ -89,8 +97,17 @@ type Thing {
   id: String!
   imageUrls: [String!]!
   owner: Lender!
+  requiredBorrowerFlags: [BorrowerVerificationFlags!]!
+  status: ThingStatus!
   storageLocation: Location!
   title: ThingTitle!
+}
+
+enum ThingStatus {
+  BORROWED
+  DAMAGED
+  READY
+  RESERVED
 }
 
 type ThingTitle {
