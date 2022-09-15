@@ -2,6 +2,13 @@
 ### Do not make changes to this file directly
 
 
+type Borrower {
+  BorrowerVerificationFlags: [BorrowerVerificationFlags]!
+  fees: [LibraryFee]!
+  library: Library!
+  person: Person!
+}
+
 enum BorrowerVerificationFlags {
   CURRENT_ADDRESS_VERIFIED
   EMAIL_VERIFIED
@@ -22,6 +29,13 @@ type Email {
   value: String!
 }
 
+enum FeeStatus {
+  FORGIVEN
+  IN_PAYMENT
+  OUTSTANDING
+  PAID
+}
+
 type Lender {
   id: String!
 }
@@ -34,9 +48,21 @@ interface Library {
   name: String!
 }
 
+type LibraryFee {
+  amount: Money!
+  chargedFor: Loan!
+  status: FeeStatus!
+}
+
 type LibrarySearchResult {
   library: Library!
   things: [Thing]!
+}
+
+type Loan {
+  borrower: Borrower!
+  id: String!
+  item: Thing!
 }
 
 union Location = PhysicalArea | PhysicalLocation
@@ -45,6 +71,16 @@ enum LocationTypeEnum {
   Distributed
   Physical
   Virtual
+}
+
+type Money {
+  amount: Float!
+  currencyName: String!
+  symbol: String!
+}
+
+type Mutation {
+  borrow(libraryID: String!, person: PersonInput!, thingID: String!, until: String): [Loan]!
 }
 
 type Person {

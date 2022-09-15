@@ -18,9 +18,10 @@ import {
     TimeInterval,
     USDMoney,
     WaitingListFactory,
-    TitleSearchService, ITitleSearchService, IRepository, Borrower
+    TitleSearchService, ITitleSearchService, IRepository, Borrower, IBorrowerRepository
 } from "@meansofproduction/domain"
 import {PersonRepository} from "./repositories/personRepository"
+import {BorrowerRepository} from "./repositories/borrowerRepository"
 
 const moneyFactory = new MoneyFactory()
 
@@ -105,16 +106,21 @@ const libraryRepository = new LibraryRepository(
     ]
 )
 
+const borrowerRepository = new BorrowerRepository()
+borrowerRepository.add(testyBorrower)
+
 const titleSearchService = new TitleSearchService(libraryRepository);
 
 export const context = {
     libraryRepository,
     titleSearchService,
-    personRepository
+    personRepository,
+    borrowerRepository
 }
 
 export interface Context {
     libraryRepository: ILibraryRepository
     titleSearchService: ITitleSearchService
     personRepository: IRepository<Person>
+    borrowerRepository: IBorrowerRepository
 }

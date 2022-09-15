@@ -24,6 +24,7 @@ export interface NexusGenInputs {
 
 export interface NexusGenEnums {
   BorrowerVerificationFlags: "CURRENT_ADDRESS_VERIFIED" | "EMAIL_VERIFIED" | "ID_SCANNED" | "ITEM_RFID_CHIP" | "PHONE_NUMBER"
+  FeeStatus: "FORGIVEN" | "IN_PAYMENT" | "OUTSTANDING" | "PAID"
   LocationTypeEnum: "Distributed" | "Physical" | "Virtual"
   ThingStatus: "BORROWED" | "DAMAGED" | "READY" | "RESERVED"
 }
@@ -37,6 +38,12 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Borrower: { // root type
+    BorrowerVerificationFlags: Array<NexusGenEnums['BorrowerVerificationFlags'] | null>; // [BorrowerVerificationFlags]!
+    fees: Array<NexusGenRootTypes['LibraryFee'] | null>; // [LibraryFee]!
+    library: NexusGenRootTypes['Library']; // Library!
+    person: NexusGenRootTypes['Person']; // Person!
+  }
   DistributedLibrary: { // root type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
@@ -49,10 +56,26 @@ export interface NexusGenObjects {
   Lender: { // root type
     id: string; // String!
   }
+  LibraryFee: { // root type
+    amount: NexusGenRootTypes['Money']; // Money!
+    chargedFor: NexusGenRootTypes['Loan']; // Loan!
+    status: NexusGenEnums['FeeStatus']; // FeeStatus!
+  }
   LibrarySearchResult: { // root type
     library: NexusGenRootTypes['Library']; // Library!
     things: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
   }
+  Loan: { // root type
+    borrower: NexusGenRootTypes['Borrower']; // Borrower!
+    id: string; // String!
+    item: NexusGenRootTypes['Thing']; // Thing!
+  }
+  Money: { // root type
+    amount: number; // Float!
+    currencyName: string; // String!
+    symbol: string; // String!
+  }
+  Mutation: {};
   Person: { // root type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
     id: string; // String!
@@ -120,6 +143,12 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenU
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Borrower: { // field return type
+    BorrowerVerificationFlags: Array<NexusGenEnums['BorrowerVerificationFlags'] | null>; // [BorrowerVerificationFlags]!
+    fees: Array<NexusGenRootTypes['LibraryFee'] | null>; // [LibraryFee]!
+    library: NexusGenRootTypes['Library']; // Library!
+    person: NexusGenRootTypes['Person']; // Person!
+  }
   DistributedLibrary: { // field return type
     administrator: NexusGenRootTypes['Person']; // Person!
     id: string; // String!
@@ -133,9 +162,27 @@ export interface NexusGenFieldTypes {
   Lender: { // field return type
     id: string; // String!
   }
+  LibraryFee: { // field return type
+    amount: NexusGenRootTypes['Money']; // Money!
+    chargedFor: NexusGenRootTypes['Loan']; // Loan!
+    status: NexusGenEnums['FeeStatus']; // FeeStatus!
+  }
   LibrarySearchResult: { // field return type
     library: NexusGenRootTypes['Library']; // Library!
     things: Array<NexusGenRootTypes['Thing'] | null>; // [Thing]!
+  }
+  Loan: { // field return type
+    borrower: NexusGenRootTypes['Borrower']; // Borrower!
+    id: string; // String!
+    item: NexusGenRootTypes['Thing']; // Thing!
+  }
+  Money: { // field return type
+    amount: number; // Float!
+    currencyName: string; // String!
+    symbol: string; // String!
+  }
+  Mutation: { // field return type
+    borrow: Array<NexusGenRootTypes['Loan'] | null>; // [Loan]!
   }
   Person: { // field return type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
@@ -205,6 +252,12 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  Borrower: { // field return type name
+    BorrowerVerificationFlags: 'BorrowerVerificationFlags'
+    fees: 'LibraryFee'
+    library: 'Library'
+    person: 'Person'
+  }
   DistributedLibrary: { // field return type name
     administrator: 'Person'
     id: 'String'
@@ -218,9 +271,27 @@ export interface NexusGenFieldTypeNames {
   Lender: { // field return type name
     id: 'String'
   }
+  LibraryFee: { // field return type name
+    amount: 'Money'
+    chargedFor: 'Loan'
+    status: 'FeeStatus'
+  }
   LibrarySearchResult: { // field return type name
     library: 'Library'
     things: 'Thing'
+  }
+  Loan: { // field return type name
+    borrower: 'Borrower'
+    id: 'String'
+    item: 'Thing'
+  }
+  Money: { // field return type name
+    amount: 'Float'
+    currencyName: 'String'
+    symbol: 'String'
+  }
+  Mutation: { // field return type name
+    borrow: 'Loan'
   }
   Person: { // field return type name
     emails: 'Email'
@@ -290,6 +361,14 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
+  Mutation: {
+    borrow: { // args
+      libraryID: string; // String!
+      person: NexusGenInputs['PersonInput']; // PersonInput!
+      thingID: string; // String!
+      until?: string | null; // String
+    }
+  }
   Query: {
     titleSearchResults: { // args
       person: NexusGenInputs['PersonInput']; // PersonInput!
