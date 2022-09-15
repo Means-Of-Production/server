@@ -17,12 +17,19 @@ enum BorrowerVerificationFlags {
   PHONE_NUMBER
 }
 
+"""Date custom scalar type"""
+scalar Date
+
 type DistributedLibrary implements Library {
   administrator: Person!
   id: String!
   items: [Thing]!
   location: Location!
   name: String!
+}
+
+type DueDate {
+  date: String
 }
 
 type Email {
@@ -61,8 +68,22 @@ type LibrarySearchResult {
 
 type Loan {
   borrower: Borrower!
+  dateReturned: String
+  dueDate: DueDate!
   id: String!
   item: Thing!
+  permanentLoan: Boolean!
+  returnLocation: Location!
+  status: LoanStatus!
+}
+
+enum LoanStatus {
+  BORROWED
+  OVERDUE
+  RETURNED
+  RETURNED_DAMAGED
+  RETURN_STARTED
+  WAITING_ON_LENDER_ACCEPTANCE
 }
 
 union Location = PhysicalArea | PhysicalLocation
@@ -117,7 +138,8 @@ type PhysicalLocation {
 }
 
 type Query {
-  libraries: [Library!]!
+  allLibraries: [Library!]!
+  librariesForPerson(person: PersonInput!): [Library!]!
   titleSearchResults(person: PersonInput!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
 }
 

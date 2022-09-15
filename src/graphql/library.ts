@@ -1,5 +1,5 @@
-import {enumType, extendType, interfaceType, objectType} from "nexus"
-import {Person} from "./person"
+import {enumType, extendType, interfaceType, nonNull, objectType} from "nexus"
+import {Person, PersonInput} from "./person"
 import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
 import {Location} from "./location"
 
@@ -47,14 +47,33 @@ export const DistributedLibraryObj = objectType({
     },
 })
 
-export const LibrariesQuery = extendType({
+export const AllLibrariesQuery = extendType({
     type: "Query",
     definition(t){
-        t.nonNull.list.nonNull.field("libraries", {
+        t.nonNull.list.nonNull.field("allLibraries", {
             type: "Library",
-            resolve(parent, args, context, info) {
+            resolve(parent, args, context, _info) {
                 const libraryRepository: ILibraryRepository = context.libraryRepository
                 return libraryRepository.getAll()
+            }
+        })
+    }
+})
+
+export const LibrariesForPersonQuery = extendType({
+    type: "Query",
+    definition(t){
+        t.nonNull.list.nonNull.field("librariesForPerson", {
+            type: "Library",
+            args: {
+                person: nonNull(PersonInput)
+            },
+            resolve(parent, args, context, _info){
+                const libraryRepository: ILibraryRepository = context.libraryRepository
+                const personRepository = context.personRepository
+                // TODO person should come from authorization, not client
+                const person = personRepository.get(args.person.id)
+                return libraryRepository.getLibrariesPersonCanUse(person)
             }
         })
     }

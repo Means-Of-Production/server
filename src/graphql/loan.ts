@@ -1,10 +1,12 @@
-import {extendType, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
+import {enumType, extendType, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
 import {BorrowerVerificationFlagsObj, Thing} from "./thing"
-import {DueDate, IBorrowerRepository, ILoan} from "@meansofproduction/domain"
+import {DueDate, FeeStatus, IBorrowerRepository, ILoan, LoanStatus} from "@meansofproduction/domain"
 import {Person, PersonInput} from "./person"
 import {Library} from "./library"
 import {LibraryFee} from "./money"
 import {Kind} from "graphql/language"
+import {Location} from "./location"
+import {getNamesFromEnum} from "../services/getNamesFromEnum"
 
 export const DateScalar = scalarType({
     name: 'Date',
@@ -40,6 +42,10 @@ export const Borrower = objectType({
         t.nonNull.list.field("fees", {type: LibraryFee})
     }
 })
+export const LoanStatusObj = enumType({
+    name: "LoanStatus",
+    members: getNamesFromEnum(LoanStatus)
+})
 
 export const Loan = objectType({
         name: "Loan",
@@ -47,6 +53,11 @@ export const Loan = objectType({
             t.nonNull.string("id")
             t.nonNull.field("borrower", {type: Borrower})
             t.nonNull.field("item", {type: Thing})
+            t.nonNull.field("dueDate", {type: DueDateObj})
+            t.nullable.string("dateReturned")
+            t.nonNull.field("returnLocation", {type: Location})
+            t.nonNull.field("status", {type: LoanStatusObj})
+            t.nonNull.boolean("permanentLoan")
         }
 })
 

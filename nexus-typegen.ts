@@ -5,8 +5,23 @@
 
 
 import type { Context } from "./src/context"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+  }
+}
 
 
 declare global {
@@ -25,6 +40,7 @@ export interface NexusGenInputs {
 export interface NexusGenEnums {
   BorrowerVerificationFlags: "CURRENT_ADDRESS_VERIFIED" | "EMAIL_VERIFIED" | "ID_SCANNED" | "ITEM_RFID_CHIP" | "PHONE_NUMBER"
   FeeStatus: "FORGIVEN" | "IN_PAYMENT" | "OUTSTANDING" | "PAID"
+  LoanStatus: "BORROWED" | "OVERDUE" | "RETURNED" | "RETURNED_DAMAGED" | "RETURN_STARTED" | "WAITING_ON_LENDER_ACCEPTANCE"
   LocationTypeEnum: "Distributed" | "Physical" | "Virtual"
   ThingStatus: "BORROWED" | "DAMAGED" | "READY" | "RESERVED"
 }
@@ -35,6 +51,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Date: any
 }
 
 export interface NexusGenObjects {
@@ -49,6 +66,9 @@ export interface NexusGenObjects {
     id: string; // String!
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
+  }
+  DueDate: { // root type
+    date?: string | null; // String
   }
   Email: { // root type
     value: string; // String!
@@ -67,8 +87,13 @@ export interface NexusGenObjects {
   }
   Loan: { // root type
     borrower: NexusGenRootTypes['Borrower']; // Borrower!
+    dateReturned?: string | null; // String
+    dueDate: NexusGenRootTypes['DueDate']; // DueDate!
     id: string; // String!
     item: NexusGenRootTypes['Thing']; // Thing!
+    permanentLoan: boolean; // Boolean!
+    returnLocation: NexusGenRootTypes['Location']; // Location!
+    status: NexusGenEnums['LoanStatus']; // LoanStatus!
   }
   Money: { // root type
     amount: number; // Float!
@@ -156,6 +181,9 @@ export interface NexusGenFieldTypes {
     location: NexusGenRootTypes['Location']; // Location!
     name: string; // String!
   }
+  DueDate: { // field return type
+    date: string | null; // String
+  }
   Email: { // field return type
     value: string; // String!
   }
@@ -173,8 +201,13 @@ export interface NexusGenFieldTypes {
   }
   Loan: { // field return type
     borrower: NexusGenRootTypes['Borrower']; // Borrower!
+    dateReturned: string | null; // String
+    dueDate: NexusGenRootTypes['DueDate']; // DueDate!
     id: string; // String!
     item: NexusGenRootTypes['Thing']; // Thing!
+    permanentLoan: boolean; // Boolean!
+    returnLocation: NexusGenRootTypes['Location']; // Location!
+    status: NexusGenEnums['LoanStatus']; // LoanStatus!
   }
   Money: { // field return type
     amount: number; // Float!
@@ -210,7 +243,8 @@ export interface NexusGenFieldTypes {
     zipcode: string | null; // String
   }
   Query: { // field return type
-    libraries: NexusGenRootTypes['Library'][]; // [Library!]!
+    allLibraries: NexusGenRootTypes['Library'][]; // [Library!]!
+    librariesForPerson: NexusGenRootTypes['Library'][]; // [Library!]!
     titleSearchResults: NexusGenRootTypes['TitleSearchResult'][]; // [TitleSearchResult!]!
   }
   SimpleLibrary: { // field return type
@@ -265,6 +299,9 @@ export interface NexusGenFieldTypeNames {
     location: 'Location'
     name: 'String'
   }
+  DueDate: { // field return type name
+    date: 'String'
+  }
   Email: { // field return type name
     value: 'String'
   }
@@ -282,8 +319,13 @@ export interface NexusGenFieldTypeNames {
   }
   Loan: { // field return type name
     borrower: 'Borrower'
+    dateReturned: 'String'
+    dueDate: 'DueDate'
     id: 'String'
     item: 'Thing'
+    permanentLoan: 'Boolean'
+    returnLocation: 'Location'
+    status: 'LoanStatus'
   }
   Money: { // field return type name
     amount: 'Float'
@@ -319,7 +361,8 @@ export interface NexusGenFieldTypeNames {
     zipcode: 'String'
   }
   Query: { // field return type name
-    libraries: 'Library'
+    allLibraries: 'Library'
+    librariesForPerson: 'Library'
     titleSearchResults: 'TitleSearchResult'
   }
   SimpleLibrary: { // field return type name
@@ -370,6 +413,9 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
+    librariesForPerson: { // args
+      person: NexusGenInputs['PersonInput']; // PersonInput!
+    }
     titleSearchResults: { // args
       person: NexusGenInputs['PersonInput']; // PersonInput!
       searchRequest?: NexusGenInputs['TitleSearchRequest'] | null; // TitleSearchRequest
