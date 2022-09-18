@@ -11,6 +11,7 @@ export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepo
     }
 
     protected abstract getIdFromEntity(entity: T): string
+    protected abstract create(entity: T): T
 
     public getAll(): Iterable<T> {
         return this.items.values()

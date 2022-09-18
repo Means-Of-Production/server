@@ -215,7 +215,7 @@ export interface NexusGenFieldTypes {
     symbol: string; // String!
   }
   Mutation: { // field return type
-    borrow: Array<NexusGenRootTypes['Loan'] | null>; // [Loan]!
+    borrow: NexusGenRootTypes['Loan']; // Loan!
   }
   Person: { // field return type
     emails: NexusGenRootTypes['Email'][]; // [Email!]!
@@ -245,6 +245,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     allLibraries: NexusGenRootTypes['Library'][]; // [Library!]!
     librariesForPerson: NexusGenRootTypes['Library'][]; // [Library!]!
+    loansForPerson: NexusGenRootTypes['Loan'][]; // [Loan!]!
     titleSearchResults: NexusGenRootTypes['TitleSearchResult'][]; // [TitleSearchResult!]!
   }
   SimpleLibrary: { // field return type
@@ -363,6 +364,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     allLibraries: 'Library'
     librariesForPerson: 'Library'
+    loansForPerson: 'Loan'
     titleSearchResults: 'TitleSearchResult'
   }
   SimpleLibrary: { // field return type name
@@ -414,6 +416,10 @@ export interface NexusGenArgTypes {
   }
   Query: {
     librariesForPerson: { // args
+      person: NexusGenInputs['PersonInput']; // PersonInput!
+    }
+    loansForPerson: { // args
+      hideNonReturn?: boolean | null; // Boolean
       person: NexusGenInputs['PersonInput']; // PersonInput!
     }
     titleSearchResults: { // args

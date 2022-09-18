@@ -1,12 +1,21 @@
-import {enumType, extendType, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
+import {booleanArg, enumType, extendType, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
 import {BorrowerVerificationFlagsObj, Thing} from "./thing"
-import {DueDate, FeeStatus, IBorrowerRepository, ILoan, LoanStatus} from "@meansofproduction/domain"
+import {
+    DueDate,
+    FeeStatus,
+    IBorrowerRepository,
+    ILibraryRepository,
+    ILoan,
+    ILoanSearchService,
+    LoanStatus
+} from "@meansofproduction/domain"
 import {Person, PersonInput} from "./person"
 import {Library} from "./library"
 import {LibraryFee} from "./money"
 import {Kind} from "graphql/language"
 import {Location} from "./location"
 import {getNamesFromEnum} from "../services/getNamesFromEnum"
+import {getCurrentUser} from "../services/getCurrentUser"
 
 export const DateScalar = scalarType({
     name: 'Date',
@@ -61,10 +70,29 @@ export const Loan = objectType({
         }
 })
 
+export const LoansForPersonQuery = extendType({
+    type: "Query",
+    definition(t){
+        t.nonNull.list.nonNull.field("loansForPerson", {
+            type: "Loan",
+            args: {
+                person: nonNull(PersonInput),
+                hideNonReturn: nullable(booleanArg())
+            },
+            resolve(parent, args, context, _info){
+                const user = getCurrentUser(context, args)
+
+                const loanSearchService: ILoanSearchService = context.loanSearchService
+                return loanSearchService.getLoansForPerson(user)
+            }
+        })
+    }
+})
+
 export const BorrowMutation = extendType({
     type: "Mutation",
     definition(t) {
-        t.nonNull.list.field("borrow", {
+        t.nonNull.field("borrow", {
             type: "Loan",
             args: {
                 libraryID: nonNull(stringArg()),
@@ -73,10 +101,7 @@ export const BorrowMutation = extendType({
                 until: nullable(stringArg())
             },
             resolve(_root, args, ctx): ILoan {
-                const personRepository = ctx.personRepository
-                // TODO person should come from authorization, not client
-                const person = personRepository.get(args.person.id)
-
+                const person = getCurrentUser(ctx, args)
                 const borrowerRepository: IBorrowerRepository = ctx.borrowerRepository
 
                 const borrowers = Array.from(borrowerRepository.getBorrowersForPerson(person)).filter(b => b.library.id == args.libraryID)

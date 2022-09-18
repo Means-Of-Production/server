@@ -101,7 +101,7 @@ type Money {
 }
 
 type Mutation {
-  borrow(libraryID: String!, person: PersonInput!, thingID: String!, until: String): [Loan]!
+  borrow(libraryID: String!, person: PersonInput!, thingID: String!, until: String): Loan!
 }
 
 type Person {
@@ -140,6 +140,7 @@ type PhysicalLocation {
 type Query {
   allLibraries: [Library!]!
   librariesForPerson(person: PersonInput!): [Library!]!
+  loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
   titleSearchResults(person: PersonInput!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
 }
 

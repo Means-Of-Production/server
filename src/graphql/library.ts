@@ -2,6 +2,7 @@ import {enumType, extendType, interfaceType, nonNull, objectType} from "nexus"
 import {Person, PersonInput} from "./person"
 import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
 import {Location} from "./location"
+import {getCurrentUser} from "../services/getCurrentUser"
 
 
 export const LocationType = enumType({
@@ -70,9 +71,7 @@ export const LibrariesForPersonQuery = extendType({
             },
             resolve(parent, args, context, _info){
                 const libraryRepository: ILibraryRepository = context.libraryRepository
-                const personRepository = context.personRepository
-                // TODO person should come from authorization, not client
-                const person = personRepository.get(args.person.id)
+                const person = getCurrentUser(context, args)
                 return libraryRepository.getLibrariesPersonCanUse(person)
             }
         })

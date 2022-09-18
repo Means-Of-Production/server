@@ -11,14 +11,18 @@ import {
     PhysicalArea,
     PhysicalLocation,
     SimpleLibrary,
-    SimpleTimeBasedFeeSchedule,
     Thing,
     ThingStatus,
     ThingTitle,
-    TimeInterval,
     USDMoney,
     WaitingListFactory,
-    TitleSearchService, ITitleSearchService, IRepository, Borrower, IBorrowerRepository
+    TitleSearchService,
+    ITitleSearchService,
+    IRepository,
+    Borrower,
+    IBorrowerRepository,
+    MOPServer,
+    ILoanSearchService, LoanSearchService
 } from "@meansofproduction/domain"
 import {PersonRepository} from "./repositories/personRepository"
 import {BorrowerRepository} from "./repositories/borrowerRepository"
@@ -27,7 +31,10 @@ const moneyFactory = new MoneyFactory()
 
 const waitingListFactory = new WaitingListFactory(false)
 
-const feeSchedule = new SimpleTimeBasedFeeSchedule(new USDMoney(10), moneyFactory)
+const server = new MOPServer(
+    new URL("https://localhost"),
+    "1.0.0"
+)
 
 const simpleLibrary = new SimpleLibrary(
     "testLib1",
@@ -38,7 +45,7 @@ const simpleLibrary = new SimpleLibrary(
     new USDMoney(100),
     [],
     moneyFactory,
-    feeSchedule
+    server
 )
 
 const tableSawTitle = new ThingTitle(
@@ -70,14 +77,14 @@ const distributedLibrary = new DistributedLibrary(
     new USDMoney(100),
     waitingListFactory,
     [],
-    feeSchedule,
     moneyFactory,
-    TimeInterval.fromDays(14),
     new PhysicalArea(
         new PhysicalLocation(0, 0),
         Distance.fromKilometers(10)
-    )
+    ),
+    server
 )
+
 const bob = new Person("bob", new PersonName("Bob", "Good", "Person"), [new EmailAddress("bob@test.com")])
 const bobLender = new IndividualDistributedLender("bobDist", bob, bob.emails, [], new PhysicalLocation(10, 10))
 
@@ -111,11 +118,14 @@ borrowerRepository.add(testyBorrower)
 
 const titleSearchService = new TitleSearchService(libraryRepository);
 
+const loanSearchService = new LoanSearchService(libraryRepository)
+
 export const context = {
     libraryRepository,
     titleSearchService,
     personRepository,
-    borrowerRepository
+    borrowerRepository,
+    loanSearchService
 }
 
 export interface Context {
@@ -123,4 +133,5 @@ export interface Context {
     titleSearchService: ITitleSearchService
     personRepository: IRepository<Person>
     borrowerRepository: IBorrowerRepository
+    loanSearchService: ILoanSearchService
 }
