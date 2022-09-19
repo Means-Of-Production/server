@@ -121,7 +121,7 @@ const titleSearchService = new TitleSearchService(libraryRepository);
 
 const loanSearchService = new LoanSearchService(libraryRepository)
 
-const loanRepository = new LoanRepository()
+const loanRepository = new LoanRepository(libraryRepository)
 
 export const context = {
     libraryRepository,
@@ -138,5 +138,5 @@ export interface Context {
     personRepository: IRepository<Person>
     borrowerRepository: IBorrowerRepository
     loanSearchService: ILoanSearchService
-    loanRepository: IRepository<ILoan>
+    loanRepository: LoanRepository
 }

@@ -17,6 +17,7 @@ import {Location} from "./location"
 import {getNamesFromEnum} from "../services/getNamesFromEnum"
 import {getCurrentUser} from "../services/getCurrentUser"
 import {context} from "../context"
+import {LoanRepository} from "../repositories/loanRepository"
 
 export const DateScalar = scalarType({
     name: 'Date',
@@ -88,8 +89,8 @@ export const LoansForPersonQuery = extendType({
             resolve(parent, args, context, _info){
                 const user = getCurrentUser(context, args)
 
-                const loanSearchService: ILoanSearchService = context.loanSearchService
-                return loanSearchService.getLoansForPerson(user)
+                const loanRepository: LoanRepository = context.loanRepository
+                return loanRepository.getLoansForPerson(user)
             }
         })
     }
