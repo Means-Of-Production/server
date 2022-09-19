@@ -1,4 +1,4 @@
-import {enumType, extendType, interfaceType, nonNull, objectType} from "nexus"
+import {enumType, extendType, inputObjectType, interfaceType, nonNull, objectType} from "nexus"
 import {Person, PersonInput} from "./person"
 import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
 import {Location} from "./location"
@@ -46,6 +46,13 @@ export const DistributedLibraryObj = objectType({
     definition(t) {
         t.implements("Library")
     },
+})
+
+export const LibraryInput = inputObjectType({
+    name: "LibraryInput",
+    definition(t) {
+        t.nonNull.string("id")
+    }
 })
 
 export const AllLibrariesQuery = extendType({

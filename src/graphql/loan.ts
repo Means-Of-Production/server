@@ -1,16 +1,13 @@
-import {booleanArg, enumType, extendType, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
+import {booleanArg, enumType, extendType, intArg, nonNull, nullable, objectType, scalarType, stringArg} from "nexus"
 import {BorrowerVerificationFlagsObj, Thing} from "./thing"
 import {
     DueDate,
-    FeeStatus,
-    IBorrowerRepository,
-    ILibraryRepository,
-    ILoan,
-    ILoanSearchService, IRepository,
+    IBorrowerRepository, ILibraryRepository,
+    ILoan, ILoanRepository,
     LoanStatus
 } from "@meansofproduction/domain"
 import {Person, PersonInput} from "./person"
-import {Library} from "./library"
+import {Library, LibraryInput} from "./library"
 import {LibraryFee} from "./money"
 import {Kind} from "graphql/language"
 import {Location} from "./location"
@@ -96,6 +93,29 @@ export const LoansForPersonQuery = extendType({
     }
 })
 
+export const LoansForLibraryQuery = extendType({
+    type: "Query",
+    definition(t){
+        t.nonNull.list.nonNull.field("loansForLibrary", {
+            type: "Loan",
+            args: {
+                library: nonNull(LibraryInput),
+                hideNonReturn: nullable(booleanArg())
+            },
+            resolve(parent, args, context, _info){
+                const libraryRepository: ILibraryRepository = context.libraryRepository
+                const library = libraryRepository.get(args.library.id)
+                if(!library){
+                    throw new Error(`No library found for id ${args.library.id}`)
+                }
+
+                const loanRepository: LoanRepository = context.loanRepository
+                return loanRepository.getLoansForLibrary(library)
+            }
+        })
+    }
+})
+
 export const BorrowMutation = extendType({
     type: "Mutation",
     definition(t) {
@@ -128,10 +148,8 @@ export const BorrowMutation = extendType({
 
                 const loan = library.borrow(thing, borrower, until)
 
-                const loanRepository: IRepository<ILoan> = context.loanRepository
-                const added = loanRepository.add(loan)
-
-                return added
+                const loanRepository: ILoanRepository = context.loanRepository
+                return loanRepository.add(loan)
             }
         })
     }

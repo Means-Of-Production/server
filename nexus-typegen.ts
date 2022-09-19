@@ -29,6 +29,9 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LibraryInput: { // input type
+    id: string; // String!
+  }
   PersonInput: { // input type
     id: string; // String!
   }
@@ -244,6 +247,7 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     allLibraries: NexusGenRootTypes['Library'][]; // [Library!]!
     librariesForPerson: NexusGenRootTypes['Library'][]; // [Library!]!
+    loansForLibrary: NexusGenRootTypes['Loan'][]; // [Loan!]!
     loansForPerson: NexusGenRootTypes['Loan'][]; // [Loan!]!
     titleSearchResults: NexusGenRootTypes['TitleSearchResult'][]; // [TitleSearchResult!]!
   }
@@ -363,6 +367,7 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     allLibraries: 'Library'
     librariesForPerson: 'Library'
+    loansForLibrary: 'Loan'
     loansForPerson: 'Loan'
     titleSearchResults: 'TitleSearchResult'
   }
@@ -416,6 +421,10 @@ export interface NexusGenArgTypes {
   Query: {
     librariesForPerson: { // args
       person: NexusGenInputs['PersonInput']; // PersonInput!
+    }
+    loansForLibrary: { // args
+      hideNonReturn?: boolean | null; // Boolean
+      library: NexusGenInputs['LibraryInput']; // LibraryInput!
     }
     loansForPerson: { // args
       hideNonReturn?: boolean | null; // Boolean

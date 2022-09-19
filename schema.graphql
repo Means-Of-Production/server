@@ -61,6 +61,10 @@ type LibraryFee {
   status: FeeStatus!
 }
 
+input LibraryInput {
+  id: String!
+}
+
 type LibrarySearchResult {
   library: Library!
   things: [Thing]!
@@ -140,6 +144,7 @@ type PhysicalLocation {
 type Query {
   allLibraries: [Library!]!
   librariesForPerson(person: PersonInput!): [Library!]!
+  loansForLibrary(hideNonReturn: Boolean, library: LibraryInput!): [Loan!]!
   loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
   titleSearchResults(person: PersonInput!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
 }

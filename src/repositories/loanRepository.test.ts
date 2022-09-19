@@ -12,8 +12,6 @@ describe("LoanSearchService", () => {
         const otherBorrower: IBorrower = mock()
         when(otherBorrower.person).thenReturn(otherPerson)
 
-        const library: ILibrary = mock()
-        when(library.getLoans())
         const libraryRepository: ILibraryRepository = mock()
 
         const loan1: ILoan = mock()
@@ -21,8 +19,6 @@ describe("LoanSearchService", () => {
 
         const loan2: ILoan = mock()
         when(loan2.borrower).thenReturn(instance(otherBorrower))
-
-        when(library.getLoans()).thenReturn([instance(loan1), instance(loan2)])
 
         const underTest = new LoanRepository(instance(libraryRepository))
         underTest.add(instance(loan1))

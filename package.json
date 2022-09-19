@@ -1,6 +1,6 @@
 {
   "name": "@meansofproduction/server",
-  "version": "1.0,.0",
+  "version": "1.0.0",
   "description": "Server for the MeansOfProduction library project",
   "main": "./dist/esm/index.js",
   "scripts": {
@@ -33,7 +33,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@meansofproduction/domain": "^2.1.1",
+    "@meansofproduction/domain": "^3.0.0",
     "apollo-server": "^3.10.1",
     "graphql": "^16.6.0",
     "nexus": "^1.3.0",
