@@ -22,10 +22,11 @@ import {
     Borrower,
     IBorrowerRepository,
     MOPServer,
-    ILoanSearchService, LoanSearchService
+    ILoanSearchService, LoanSearchService, ILoan
 } from "@meansofproduction/domain"
 import {PersonRepository} from "./repositories/personRepository"
 import {BorrowerRepository} from "./repositories/borrowerRepository"
+import {LoanRepository} from "./repositories/loanRepository"
 
 const moneyFactory = new MoneyFactory()
 
@@ -120,12 +121,15 @@ const titleSearchService = new TitleSearchService(libraryRepository);
 
 const loanSearchService = new LoanSearchService(libraryRepository)
 
+const loanRepository = new LoanRepository()
+
 export const context = {
     libraryRepository,
     titleSearchService,
     personRepository,
     borrowerRepository,
-    loanSearchService
+    loanSearchService,
+    loanRepository
 }
 
 export interface Context {
@@ -134,4 +138,5 @@ export interface Context {
     personRepository: IRepository<Person>
     borrowerRepository: IBorrowerRepository
     loanSearchService: ILoanSearchService
+    loanRepository: IRepository<ILoan>
 }

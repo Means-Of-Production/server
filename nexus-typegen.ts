@@ -93,7 +93,6 @@ export interface NexusGenObjects {
     item: NexusGenRootTypes['Thing']; // Thing!
     permanentLoan: boolean; // Boolean!
     returnLocation: NexusGenRootTypes['Location']; // Location!
-    status: NexusGenEnums['LoanStatus']; // LoanStatus!
   }
   Money: { // root type
     amount: number; // Float!

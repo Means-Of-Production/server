@@ -1,31 +1,15 @@
 import {BaseInMemoryRepository} from "./baseInMemoryRepository";
-import {ILibrary, ILibraryRepository, PersonName, Person,
-    PhysicalLocation, WaitingListFactory, MoneyFactory, EmailAddress} from "@meansofproduction/domain"
+import {
+    ILibrary, ILibraryRepository, Person, SimpleLibrary, DistributedLibrary, PhysicalArea
+} from "@meansofproduction/domain"
 
 export class LibraryRepository extends BaseInMemoryRepository<ILibrary> implements ILibraryRepository {
     constructor(libraries: Iterable<ILibrary> = []) {
         super();
 
-        const waitingListFactory = new WaitingListFactory(false)
-        const person = new Person("testPerson", new PersonName("Testy", "McTesterson"), [new EmailAddress("test@test.com")])
-        const location = new PhysicalLocation(0, 0, "84 Manhattan Ave Brooklyn, NY")
-        const moneyFactory = new MoneyFactory()
-
         for(const lib of libraries){
             this.add(lib)
         }
-/*
-        const library = new SimpleLibrary(
-            "testLibrary",
-            person,
-            location,
-            waitingListFactory,
-            new USDMoney(100),
-            [],
-            moneyFactory,
-            SimpleTimeBasedFeeSchedule,
-            new IdFactory()
-        )*/
     }
 
     protected getIdFromEntity(entity: ILibrary): string {
@@ -43,5 +27,38 @@ export class LibraryRepository extends BaseInMemoryRepository<ILibrary> implemen
                 }
             }
         }
+    }
+
+    protected create(entity: ILibrary): ILibrary {
+        if(entity instanceof (SimpleLibrary)){
+            return new SimpleLibrary(
+                this.newId(),
+                entity.name,
+                entity.administrator,
+                entity.location,
+                entity.waitingListFactory,
+                entity.maxFinesBeforeSuspension,
+                entity.getLoans(),
+                entity.moneyFactory,
+                entity.mopServer,
+                entity.feeSchedule
+            )
+        }
+        if(entity instanceof DistributedLibrary) {
+            return new DistributedLibrary(
+                this.newId(),
+                entity.name,
+                entity.administrator,
+                entity.maxFinesBeforeSuspension,
+                entity.waitingListFactory,
+                entity.getLoans(),
+                entity.moneyFactory,
+                entity.location as PhysicalArea,
+                entity.mopServer,
+                entity.feeSchedule,
+                entity.defaultLoanTime
+            )
+        }
+        throw new Error(`Don't know how to handle library of type ${entity} yet!`)
     }
 }

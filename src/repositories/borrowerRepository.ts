@@ -1,16 +1,9 @@
-import {EntityNotAssignedIdError, IBorrower, IBorrowerRepository, Person} from "@meansofproduction/domain"
+import {EntityNotAssignedIdError, IBorrower, IBorrowerRepository, Person, Borrower} from "@meansofproduction/domain"
 import {BaseInMemoryRepository} from "./baseInMemoryRepository"
 
 export class BorrowerRepository extends BaseInMemoryRepository<IBorrower> implements IBorrowerRepository{
     public constructor() {
         super()
-    }
-
-    protected getIdFromEntity(entity: IBorrower): string {
-        if(!entity.id){
-            throw new EntityNotAssignedIdError("Borrower has no id yet!")
-        }
-        return entity.id
     }
 
     * getBorrowersForPerson(person: Person): Iterable<IBorrower> {
@@ -19,6 +12,16 @@ export class BorrowerRepository extends BaseInMemoryRepository<IBorrower> implem
                 yield borrower
             }
         }
+    }
+
+    protected create(entity: IBorrower): IBorrower {
+        return new Borrower(
+            this.newId(),
+            entity.person,
+            entity.library,
+            Array.from(entity.verificationFlags),
+            Array.from(entity.fees)
+        )
     }
 
 }

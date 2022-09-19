@@ -6,7 +6,7 @@ import {
     IBorrowerRepository,
     ILibraryRepository,
     ILoan,
-    ILoanSearchService,
+    ILoanSearchService, IRepository,
     LoanStatus
 } from "@meansofproduction/domain"
 import {Person, PersonInput} from "./person"
@@ -16,6 +16,7 @@ import {Kind} from "graphql/language"
 import {Location} from "./location"
 import {getNamesFromEnum} from "../services/getNamesFromEnum"
 import {getCurrentUser} from "../services/getCurrentUser"
+import {context} from "../context"
 
 export const DateScalar = scalarType({
     name: 'Date',
@@ -65,7 +66,12 @@ export const Loan = objectType({
             t.nonNull.field("dueDate", {type: DueDateObj})
             t.nullable.string("dateReturned")
             t.nonNull.field("returnLocation", {type: Location})
-            t.nonNull.field("status", {type: LoanStatusObj})
+            t.nonNull.field("status", {
+                type: LoanStatusObj,
+                resolve(loan: ILoan){
+                    return LoanStatus[loan.status]
+                }
+            })
             t.nonNull.boolean("permanentLoan")
         }
 })
@@ -119,7 +125,12 @@ export const BorrowMutation = extendType({
 
                 const until = args.until ? new DueDate(new Date(Date.parse(args.until))) : new DueDate(null)
 
-                return library.borrow(thing, borrower, until)
+                const loan = library.borrow(thing, borrower, until)
+
+                const loanRepository: IRepository<ILoan> = context.loanRepository
+                const added = loanRepository.add(loan)
+
+                return added
             }
         })
     }
