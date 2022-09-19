@@ -1,7 +1,8 @@
-import {enumType, extendType, interfaceType, objectType} from "nexus"
+import {enumType, extendType, inputObjectType, interfaceType, nonNull, objectType, stringArg} from "nexus"
 import {Person} from "./person"
 import {DistributedLibrary, ILibrary, ILibraryRepository, SimpleLibrary} from "@meansofproduction/domain"
 import {Location} from "./location"
+import {getCurrentUser} from "../services/getCurrentUser"
 
 
 export const LocationType = enumType({
@@ -47,14 +48,31 @@ export const DistributedLibraryObj = objectType({
     },
 })
 
-export const LibrariesQuery = extendType({
+export const AllLibrariesQuery = extendType({
     type: "Query",
     definition(t){
-        t.nonNull.list.nonNull.field("libraries", {
+        t.nonNull.list.nonNull.field("allLibraries", {
             type: "Library",
-            resolve(parent, args, context, info) {
+            resolve(parent, args, context, _info) {
                 const libraryRepository: ILibraryRepository = context.libraryRepository
                 return libraryRepository.getAll()
+            }
+        })
+    }
+})
+
+export const LibrariesForPersonQuery = extendType({
+    type: "Query",
+    definition(t){
+        t.nonNull.list.nonNull.field("librariesForPerson", {
+            type: "Library",
+            args: {
+                personID: nonNull(stringArg())
+            },
+            resolve(parent, args, context, _info){
+                const libraryRepository: ILibraryRepository = context.libraryRepository
+                const person = getCurrentUser(context, args)
+                return libraryRepository.getLibrariesPersonCanUse(person)
             }
         })
     }

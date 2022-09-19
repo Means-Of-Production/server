@@ -2,6 +2,7 @@ import {enumType, objectType} from "nexus"
 import {Location} from "./location"
 import {Lender} from "./lender"
 import {BorrowerVerificationFlags, IThing, ThingStatus} from "@meansofproduction/domain"
+import {getNamesFromEnum} from "../services/getNamesFromEnum"
 
 export const ThingTitle = objectType({
     name: "ThingTitle",
@@ -12,11 +13,6 @@ export const ThingTitle = objectType({
         t.nullable.string("description")
     }
 })
-
-function getNamesFromEnum(t: typeof BorrowerVerificationFlags | typeof ThingStatus): string[] {
-    // @ts-ignore
-    return Object.keys(t).filter(enumMember => parseInt(enumMember, 10) >= 0).map(e => t[e])
-}
 
 export const BorrowerVerificationFlagsObj = enumType({
         name: "BorrowerVerificationFlags",

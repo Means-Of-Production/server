@@ -6,7 +6,11 @@ export class PersonRepository extends BaseInMemoryRepository<Person> implements 
         super()
     }
 
-    protected getIdFromEntity(entity: Person): string {
-        return entity.id
+    protected create(entity: Person): Person {
+        return new Person(
+            this.newId(),
+            entity.name,
+            entity.emails
+        )
     }
 }

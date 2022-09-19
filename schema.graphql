@@ -2,6 +2,13 @@
 ### Do not make changes to this file directly
 
 
+type Borrower {
+  BorrowerVerificationFlags: [BorrowerVerificationFlags]!
+  fees: [LibraryFee]!
+  library: Library!
+  person: Person!
+}
+
 enum BorrowerVerificationFlags {
   CURRENT_ADDRESS_VERIFIED
   EMAIL_VERIFIED
@@ -9,6 +16,9 @@ enum BorrowerVerificationFlags {
   ITEM_RFID_CHIP
   PHONE_NUMBER
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type DistributedLibrary implements Library {
   administrator: Person!
@@ -18,8 +28,19 @@ type DistributedLibrary implements Library {
   name: String!
 }
 
+type DueDate {
+  date: String
+}
+
 type Email {
   value: String!
+}
+
+enum FeeStatus {
+  FORGIVEN
+  IN_PAYMENT
+  OUTSTANDING
+  PAID
 }
 
 type Lender {
@@ -34,9 +55,35 @@ interface Library {
   name: String!
 }
 
+type LibraryFee {
+  amount: Money!
+  chargedFor: Loan!
+  status: FeeStatus!
+}
+
 type LibrarySearchResult {
   library: Library!
   things: [Thing]!
+}
+
+type Loan {
+  borrower: Borrower!
+  dateReturned: String
+  dueDate: DueDate!
+  id: String!
+  item: Thing!
+  permanentLoan: Boolean!
+  returnLocation: Location!
+  status: LoanStatus!
+}
+
+enum LoanStatus {
+  BORROWED
+  OVERDUE
+  RETURNED
+  RETURNED_DAMAGED
+  RETURN_STARTED
+  WAITING_ON_LENDER_ACCEPTANCE
 }
 
 union Location = PhysicalArea | PhysicalLocation
@@ -45,6 +92,16 @@ enum LocationTypeEnum {
   Distributed
   Physical
   Virtual
+}
+
+type Money {
+  amount: Float!
+  currencyName: String!
+  symbol: String!
+}
+
+type Mutation {
+  borrow(libraryID: String!, personID: String!, thingID: String!, until: String): Loan!
 }
 
 type Person {
@@ -81,8 +138,11 @@ type PhysicalLocation {
 }
 
 type Query {
-  libraries: [Library!]!
-  titleSearchResults(person: PersonInput!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
+  allLibraries: [Library!]!
+  librariesForPerson(personID: String!): [Library!]!
+  loansForLibrary(hideNonReturn: Boolean, libraryID: String!): [Loan!]!
+  loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
+  titleSearchResults(personID: String!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
 }
 
 type SimpleLibrary implements Library {
