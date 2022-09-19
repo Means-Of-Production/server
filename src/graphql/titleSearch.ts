@@ -1,7 +1,6 @@
-import {extendType, inputObjectType, nonNull, nullable, objectType} from "nexus"
+import {extendType, inputObjectType, nonNull, nullable, objectType, stringArg} from "nexus"
 import {Thing, ThingTitle} from "./thing"
 import {Library} from "./library"
-import {PersonInput} from "./person"
 import {getCurrentUser} from "../services/getCurrentUser"
 
 
@@ -34,10 +33,10 @@ export const TitleSearchRequestQuery = extendType({
         t.nonNull.list.nonNull.field("titleSearchResults", {
             type: "TitleSearchResult",
             args: {
-                person: nonNull(PersonInput),
+                personID: nonNull(stringArg()),
                 searchRequest: nullable(TitleSearchRequest)
             },
-            resolve(parent, args, context, info){
+            resolve(parent, args, context, _info){
                 const searchRequest = args.searchRequest
                 const person = getCurrentUser(context, args)
 

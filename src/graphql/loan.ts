@@ -7,7 +7,7 @@ import {
     LoanStatus
 } from "@meansofproduction/domain"
 import {Person, PersonInput} from "./person"
-import {Library, LibraryInput} from "./library"
+import {Library} from "./library"
 import {LibraryFee} from "./money"
 import {Kind} from "graphql/language"
 import {Location} from "./location"
@@ -99,14 +99,14 @@ export const LoansForLibraryQuery = extendType({
         t.nonNull.list.nonNull.field("loansForLibrary", {
             type: "Loan",
             args: {
-                library: nonNull(LibraryInput),
+                libraryID: nonNull(stringArg()),
                 hideNonReturn: nullable(booleanArg())
             },
             resolve(parent, args, context, _info){
                 const libraryRepository: ILibraryRepository = context.libraryRepository
-                const library = libraryRepository.get(args.library.id)
+                const library = libraryRepository.get(args.libraryID)
                 if(!library){
-                    throw new Error(`No library found for id ${args.library.id}`)
+                    throw new Error(`No library found for id ${args.libraryID}`)
                 }
 
                 const loanRepository: LoanRepository = context.loanRepository
@@ -123,7 +123,7 @@ export const BorrowMutation = extendType({
             type: "Loan",
             args: {
                 libraryID: nonNull(stringArg()),
-                person: nonNull(PersonInput),
+                personID: nonNull(stringArg()),
                 thingID: nonNull(stringArg()),
                 until: nullable(stringArg())
             },

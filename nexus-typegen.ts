@@ -29,9 +29,6 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  LibraryInput: { // input type
-    id: string; // String!
-  }
   PersonInput: { // input type
     id: string; // String!
   }
@@ -413,25 +410,25 @@ export interface NexusGenArgTypes {
   Mutation: {
     borrow: { // args
       libraryID: string; // String!
-      person: NexusGenInputs['PersonInput']; // PersonInput!
+      personID: string; // String!
       thingID: string; // String!
       until?: string | null; // String
     }
   }
   Query: {
     librariesForPerson: { // args
-      person: NexusGenInputs['PersonInput']; // PersonInput!
+      personID: string; // String!
     }
     loansForLibrary: { // args
       hideNonReturn?: boolean | null; // Boolean
-      library: NexusGenInputs['LibraryInput']; // LibraryInput!
+      libraryID: string; // String!
     }
     loansForPerson: { // args
       hideNonReturn?: boolean | null; // Boolean
       person: NexusGenInputs['PersonInput']; // PersonInput!
     }
     titleSearchResults: { // args
-      person: NexusGenInputs['PersonInput']; // PersonInput!
+      personID: string; // String!
       searchRequest?: NexusGenInputs['TitleSearchRequest'] | null; // TitleSearchRequest
     }
   }
