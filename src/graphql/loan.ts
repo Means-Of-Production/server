@@ -13,7 +13,7 @@ import {Kind} from "graphql/language"
 import {Location} from "./location"
 import {getNamesFromEnum} from "../services/getNamesFromEnum"
 import {getCurrentUser} from "../services/getCurrentUser"
-import {context} from "../context"
+import {populatedContext} from "../index"
 import {LoanRepository} from "../repositories/loanRepository"
 
 export const DateScalar = scalarType({
@@ -84,7 +84,7 @@ export const LoansForPersonQuery = extendType({
                 hideNonReturn: nullable(booleanArg())
             },
             resolve(parent, args, context, _info){
-                const user = getCurrentUser(context, args)
+                const user = getCurrentUser(context)
 
                 const loanRepository: LoanRepository = context.loanRepository
                 return loanRepository.getLoansForPerson(user)
@@ -128,7 +128,7 @@ export const BorrowMutation = extendType({
                 until: nullable(stringArg())
             },
             resolve(_root, args, ctx): ILoan {
-                const person = getCurrentUser(ctx, args)
+                const person = getCurrentUser(ctx)
                 const borrowerRepository: IBorrowerRepository = ctx.borrowerRepository
 
                 const borrowers = Array.from(borrowerRepository.getBorrowersForPerson(person)).filter(b => b.library.id == args.libraryID)
@@ -148,7 +148,7 @@ export const BorrowMutation = extendType({
 
                 const loan = library.borrow(thing, borrower, until)
 
-                const loanRepository: ILoanRepository = context.loanRepository
+                const loanRepository: ILoanRepository = populatedContext.loanRepository
                 return loanRepository.add(loan)
             }
         })

@@ -9,7 +9,7 @@ import {instance, mock, when} from "ts-mockito";
 
 
 describe("library repository", () => {
-    it("gets libraries via person", () => {1
+    it("gets libraries via person", () => {
         const personName = new PersonName("Testy", "McTesterson")
         const person = new Person("test", personName, [])
 

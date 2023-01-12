@@ -38,7 +38,7 @@ export const TitleSearchRequestQuery = extendType({
             },
             resolve(parent, args, context, _info){
                 const searchRequest = args.searchRequest
-                const person = getCurrentUser(context, args)
+                const person = getCurrentUser(context)
 
                 const titleSearchService = context.titleSearchService;
                 return titleSearchService.find(person, searchRequest)

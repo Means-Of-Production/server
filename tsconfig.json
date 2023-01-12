@@ -1,12 +1,12 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "ES2018",
+        "module": "es2022",
+        "target": "es2022",
         "lib": ["esnext"],
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "declaration": true,
-        "outDir": "./dist/esm",
+        "outDir": "./dist",
         "experimentalDecorators": true,
         "sourceMap": true,
         "strict": true
