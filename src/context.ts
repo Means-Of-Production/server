@@ -1,4 +1,4 @@
-import {LibraryRepository} from "./repositories/libraryRepository"
+import {LibraryRepository} from "./repositories/libraryRepository.js"
 import {
     Distance,
     DistributedLibrary,
@@ -24,9 +24,12 @@ import {
     MOPServer,
     ILoanRepository
 } from "@meansofproduction/domain"
-import {PersonRepository} from "./repositories/personRepository"
-import {BorrowerRepository} from "./repositories/borrowerRepository"
-import {LoanRepository} from "./repositories/loanRepository"
+import {PersonRepository} from "./repositories/personRepository.js"
+import {BorrowerRepository} from "./repositories/borrowerRepository.js"
+import {LoanRepository} from "./repositories/loanRepository.js"
+import {IAuthenticationService} from "./services/IAuthenticationService.js";
+import {Auth0AuthenticationService} from "./services/Auth0AuthenticationService.js";
+import {User} from "./entities/User";
 
 const moneyFactory = new MoneyFactory()
 
@@ -107,32 +110,38 @@ const personRepository = new PersonRepository()
 personRepository.add(testy)
 personRepository.add(bob)
 
-const libraryRepository = new LibraryRepository(
+export const libraryRepository = new LibraryRepository(
     [
         simpleLibrary,
         distributedLibrary
     ]
 )
 
-const borrowerRepository = new BorrowerRepository()
+export const borrowerRepository = new BorrowerRepository()
 borrowerRepository.add(testyBorrower)
 
-const titleSearchService = new TitleSearchService(libraryRepository);
+export const titleSearchService = new TitleSearchService(libraryRepository);
 
-const loanRepository = new LoanRepository(libraryRepository)
+export const loanRepository = new LoanRepository(libraryRepository)
+
+export const authenticationService = new Auth0AuthenticationService()
 
 export const context = {
     libraryRepository,
     titleSearchService,
     personRepository,
     borrowerRepository,
-    loanRepository
+    loanRepository,
+    authenticationService,
+    user: null
 }
 
-export interface Context {
+export interface IContext {
     libraryRepository: ILibraryRepository
     titleSearchService: ITitleSearchService
     personRepository: IRepository<Person>
     borrowerRepository: IBorrowerRepository
     loanRepository: ILoanRepository
+    authenticationService: IAuthenticationService
+    user: User | null
 }

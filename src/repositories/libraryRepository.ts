@@ -1,4 +1,4 @@
-import {BaseInMemoryRepository} from "./baseInMemoryRepository";
+import {BaseInMemoryRepository} from "./baseInMemoryRepository.js";
 import {
     ILibrary, ILibraryRepository, Person, SimpleLibrary, DistributedLibrary, PhysicalArea
 } from "@meansofproduction/domain"

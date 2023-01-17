@@ -1,6 +1,6 @@
 import {EntityNotAssignedIdError, IRepository} from '@meansofproduction/domain'
 import {v4 as uuidv4} from 'uuid'
-import {ConflictingKeyException, ResourceNotFoundException} from "../valueItems/exceptions"
+import {ConflictingKeyException, ResourceNotFoundException} from "../valueItems/exceptions.js"
 import {IEntity} from "@meansofproduction/domain/lib/cjs/entities/IEntity"
 import internal from "stream"
 

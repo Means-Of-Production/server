@@ -1,4 +1,4 @@
-import {BaseInMemoryRepository} from "./baseInMemoryRepository"
+import {BaseInMemoryRepository} from "./baseInMemoryRepository.js"
 import {ILibrary,
     ILibraryRepository,
     ILoan,
