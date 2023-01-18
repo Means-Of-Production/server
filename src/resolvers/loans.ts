@@ -8,15 +8,15 @@ import {
 import {getRequestedPerson} from "../services/getRequestedPerson.js";
 
 export function loansForPerson(parent, args, context, _info){
-    const user = getRequestedPerson(context, args)
+    const user = getRequestedPerson(context.context, args)
 
-    const loanRepository: ILoanRepository = context.loanRepository
+    const loanRepository: ILoanRepository = context.context.loanRepository
     return loanRepository.getLoansForPerson(user)
 }
 
 
 export function loansForLibrary(parent, args, context, _info){
-    const libraryRepository: ILibraryRepository = context.libraryRepository
+    const libraryRepository: ILibraryRepository = context.context.libraryRepository
     const library = libraryRepository.get(args.libraryID)
     if(!library){
         throw new Error(`No library found for id ${args.libraryID}`)
@@ -28,7 +28,7 @@ export function loansForLibrary(parent, args, context, _info){
 
 export function borrowMutation(_root, args, ctx): ILoan {
     const person = getRequestedPerson(ctx, args)
-    const borrowerRepository: IBorrowerRepository = ctx.borrowerRepository
+    const borrowerRepository: IBorrowerRepository = ctx.context.borrowerRepository
 
     const borrowers = Array.from(borrowerRepository.getBorrowersForPerson(person)).filter(b => b.library.id == args.libraryID)
     if (borrowers.length < 1) {
@@ -47,6 +47,6 @@ export function borrowMutation(_root, args, ctx): ILoan {
 
     const loan = library.borrow(thing, borrower, until)
 
-    const loanRepository: ILoanRepository = ctx.loanRepository
+    const loanRepository: ILoanRepository = ctx.context.loanRepository
     return loanRepository.add(loan)
 }

@@ -2,8 +2,8 @@ import {getRequestedPerson} from "../services/getRequestedPerson";
 
 export function titleSearch(parent, args, context, _info){
     const searchRequest = args.searchRequest
-    const person = getRequestedPerson(context, args)
+    const person = getRequestedPerson(context.context, args)
 
-    const titleSearchService = context.titleSearchService;
+    const titleSearchService = context.context.titleSearchService;
     return titleSearchService.find(person, searchRequest)
 }
