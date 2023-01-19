@@ -27,8 +27,8 @@ import {
 import {PersonRepository} from "./repositories/personRepository.js"
 import {BorrowerRepository} from "./repositories/borrowerRepository.js"
 import {LoanRepository} from "./repositories/loanRepository.js"
-import {IAuthenticationService} from "./services/IAuthenticationService.js";
-import {Auth0AuthenticationService} from "./services/Auth0AuthenticationService.js";
+import {IAuthenticationService} from "./services/Authentication/IAuthenticationService.js";
+import {NullAuthenticationService} from "./services/Authentication/NullAuthenticationService.js";
 import {User} from "./entities/User";
 
 const moneyFactory = new MoneyFactory()
@@ -124,7 +124,7 @@ export const titleSearchService = new TitleSearchService(libraryRepository);
 
 export const loanRepository = new LoanRepository(libraryRepository)
 
-export const authenticationService = new Auth0AuthenticationService()
+export const authenticationService = new NullAuthenticationService()
 
 export const context = {
     libraryRepository,

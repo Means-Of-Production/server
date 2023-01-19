@@ -1,5 +1,5 @@
-import {IAuthenticationService} from "./IAuthenticationService";
-import {User} from "../entities/User.js";
+import {IAuthenticationService} from "./IAuthenticationService.js";
+import {User} from "../../entities/User.js";
 
 import jwt from "jwt-promisify";
 import {Algorithm} from "jwt-promisify";
