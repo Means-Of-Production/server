@@ -29,7 +29,7 @@ import {BorrowerRepository} from "./repositories/borrowerRepository.js"
 import {LoanRepository} from "./repositories/loanRepository.js"
 import {IAuthenticationService} from "./services/Authentication/IAuthenticationService.js";
 import {NullAuthenticationService} from "./services/Authentication/NullAuthenticationService.js";
-import {User} from "./entities/User";
+import {User} from "./entities/user";
 
 const moneyFactory = new MoneyFactory()
 

@@ -99,10 +99,6 @@ type Money {
   symbol: String!
 }
 
-type Mutation {
-  borrow(libraryID: String!, personID: String!, thingID: String!, until: String): Loan!
-}
-
 type Person {
   emails: [Email!]!
   id: String!
@@ -177,6 +173,21 @@ type TitleSearchResult {
   title: ThingTitle!
 }
 
+enum UserRoles{
+  LIBRARY_USER,
+  LIBRARY_ADMIN,
+  PLATFORM_ADMIN
+}
+
+type User{
+  email: Email
+  roles: [UserRoles!]
+}
+
+input UserInput {
+  email: String!
+}
+
 type VirtualLocation {
   url: String
 }
@@ -187,4 +198,9 @@ type Query {
   loansForLibrary(hideNonReturn: Boolean, libraryID: String!): [Loan!]!
   loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
   titleSearchResults(personID: String!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
+  currentUser: User
+}
+
+type Mutation {
+  borrow(libraryID: String!, personID: String!, thingID: String!, until: String): Loan!
 }

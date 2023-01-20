@@ -1,5 +1,5 @@
 import {IAuthenticationService} from "./IAuthenticationService.js";
-import {User} from "../../entities/User.js";
+import {User} from "../../entities/user.js";
 
 import jwt from "jwt-promisify";
 import {Algorithm} from "jwt-promisify";
@@ -47,7 +47,7 @@ export class Auth0AuthenticationService implements IAuthenticationService{
     async getFromToken(token: string): Promise<User | null> {
         const validToken = await isTokenValid(token)
         if(validToken === true){
-            return new User(token)
+            return new User(undefined, token)
         }
 
         return null

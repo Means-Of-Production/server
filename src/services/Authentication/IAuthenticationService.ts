@@ -1,4 +1,4 @@
-import {User} from "../../entities/User.js";
+import {User} from "../../entities/user.js";
 
 export interface IAuthenticationService {
     getFromToken(token: string) : Promise<User | null>
