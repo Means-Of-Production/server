@@ -1,6 +1,0 @@
-export * from "./person"
-export * from "./library"
-export * from "./location"
-export * from "./thing"
-export * from "./titleSearch"
-export * from "./loan"

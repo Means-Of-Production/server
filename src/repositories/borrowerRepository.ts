@@ -1,5 +1,5 @@
 import {EntityNotAssignedIdError, IBorrower, IBorrowerRepository, Person, Borrower} from "@meansofproduction/domain"
-import {BaseInMemoryRepository} from "./baseInMemoryRepository"
+import {BaseInMemoryRepository} from "./baseInMemoryRepository.js"
 
 export class BorrowerRepository extends BaseInMemoryRepository<IBorrower> implements IBorrowerRepository{
     public constructor() {
