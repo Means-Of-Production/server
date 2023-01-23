@@ -133,7 +133,9 @@ export const context = {
     borrowerRepository,
     loanRepository,
     authenticationService,
-    user: null
+    user: null,
+    serverUrl: "https://localhost:4000",
+    serverVersion: "1.0.0"
 }
 
 export interface IContext {
@@ -143,5 +145,7 @@ export interface IContext {
     borrowerRepository: IBorrowerRepository
     loanRepository: ILoanRepository
     authenticationService: IAuthenticationService
-    user: User | null
+    user: User | null,
+    serverUrl: string
+    serverVersion: string
 }

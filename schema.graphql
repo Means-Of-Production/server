@@ -27,6 +27,14 @@ type DistributedLibrary implements Library {
   name: String!
 }
 
+input DistributedLibraryInput {
+  newAdministrator: NewPersonInput
+  existingAdministrator: PersonIdInput
+  location: PhysicalAreaInput
+  name: String!
+  maxFees: MoneyInput
+}
+
 type DueDate {
   date: String
 }
@@ -99,14 +107,25 @@ type Money {
   symbol: String!
 }
 
+input MoneyInput {
+  amount: Float!
+  currencyName: String!
+  symbol: String!
+}
+
 type Person {
   emails: [Email!]!
   id: String!
   name: PersonName!
 }
 
-input PersonInput {
+input PersonIdInput {
   id: String!
+}
+
+input NewPersonInput {
+  email: String!
+  name: PersonNameInput!
 }
 
 type PersonName {
@@ -115,8 +134,19 @@ type PersonName {
   middleName: String
 }
 
+input PersonNameInput {
+  firstName: String!
+  lastName: String!
+  middleName: String
+}
+
 type PhysicalArea {
   centerPoint: PhysicalLocation!
+  distance: Float!
+}
+
+input PhysicalAreaInput {
+  centerPoint: PhysicalLocationInput!
   distance: Float!
 }
 
@@ -132,11 +162,31 @@ type PhysicalLocation {
   zipcode: String
 }
 
+input PhysicalLocationInput {
+  apartment: String
+  city: String!
+  country: String!
+  latitude: String
+  longitude: String
+  state: String!
+  streetAddress: String!
+  streetName: String!
+  zipcode: String!
+}
+
 type SimpleLibrary implements Library {
   administrator: Person!
   id: String!
-  items: [Thing]!
+  items: [Thing!]!
   location: Location!
+  name: String!
+}
+
+input SimpleLibraryInput {
+  newAdministrator: NewPersonInput
+  existingAdministrator: PersonIdInput
+  location: PhysicalLocationInput
+  items: [ThingInput!]!
   name: String!
 }
 
@@ -148,6 +198,17 @@ type Thing {
   status: ThingStatus!
   storageLocation: Location!
   title: ThingTitle!
+}
+
+input ThingInput {
+  imageUrls: [String!]!
+  ownerID: String!
+  requiredBorrowerFlags: [BorrowerVerificationFlags!]!
+  storageLocation: PhysicalLocationInput
+  description: String
+  isbn: String
+  name: String!
+  upc: String
 }
 
 enum ThingStatus {
@@ -194,13 +255,21 @@ type VirtualLocation {
 
 type Query {
   allLibraries: [Library!]!
-  librariesForPerson(person: PersonInput!): [Library!]!
+  librariesForPerson(person: PersonIdInput!): [Library!]!
   loansForLibrary(hideNonReturn: Boolean, libraryID: String!): [Loan!]!
-  loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
+  loansForPerson(hideNonReturn: Boolean, person: PersonIdInput!): [Loan!]!
   titleSearchResults(personID: String!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
   currentUser: User
 }
 
 type Mutation {
   borrow(libraryID: String!, personID: String!, thingID: String!, until: String): Loan!
+  return(libraryID: String!, loanID: String!): Loan!
+  createDistributedLibrary(library: DistributedLibraryInput!): DistributedLibrary
+  createSimpleLibrary(library: SimpleLibraryInput!): SimpleLibrary!
+  addPerson(person: NewPersonInput): Person!
+  addPersonToLibrary(person: PersonIdInput, libraryId: String!): Borrower!
+  addThingToSimpleLibrary(libraryId: String!, thing: ThingInput!): Thing
+  addThingToPerson(personId: String!, distributedLibraryId: String!, thing: ThingInput!): Thing
+  removeThingFromPerson(personId: String!, thingId: String!): Boolean!
 }

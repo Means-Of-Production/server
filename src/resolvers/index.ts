@@ -1,6 +1,7 @@
-import {DistributedLibrary, SimpleLibrary} from "@meansofproduction/domain";
-import {allLibraries, librariesForPerson} from "./libraries.js";
-import {loansForLibrary, loansForPerson} from "./loans.js";
+import {DistributedLibrary, SimpleLibrary} from "@meansofproduction/domain"
+import {allLibraries, librariesForPerson, createDistributedLibrary} from "./libraries.js"
+import {loansForLibrary, loansForPerson} from "./loans.js"
+import {addPerson} from "./person.js"
 
 export * from './libraries.js'
 
@@ -22,4 +23,8 @@ export const resolvers = {
         loansForPerson,
         loansForLibrary
     },
+    Mutation: {
+        createDistributedLibrary,
+        addPerson
+    }
 };
