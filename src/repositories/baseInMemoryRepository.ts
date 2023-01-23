@@ -2,7 +2,6 @@ import {EntityNotAssignedIdError, IRepository} from '@meansofproduction/domain'
 import {v4 as uuidv4} from 'uuid'
 import {ConflictingKeyException, ResourceNotFoundException} from "../valueItems/exceptions.js"
 import {IEntity} from "@meansofproduction/domain/lib/cjs/entities/IEntity"
-import internal from "stream"
 
 
 export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepository<T> {
@@ -21,11 +20,11 @@ export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepo
 
     protected abstract create(entity: T): T
 
-    public getAll(): Iterable<T> {
+    public async getAll(): Promise<Iterable<T>> {
         return this.items.values()
     }
 
-    public get(id: string): T | null {
+    public async get(id: string): Promise<T | null> {
         if(!this.items.has(id)){
             return null;
         }
@@ -36,7 +35,7 @@ export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepo
         return item;
     }
 
-    public add(item: T): T {
+    public async add(item: T): Promise<T> {
         if(!item.id){
             item = this.create(item)
         }
@@ -49,7 +48,7 @@ export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepo
         return item
     }
 
-    public update(item: T): T {
+    public async update(item: T): Promise<T> {
         const id = this.getIdFromEntity(item)
         if(!this.items.has(id)){
             throw new ResourceNotFoundException()
@@ -59,7 +58,7 @@ export abstract class BaseInMemoryRepository<T extends IEntity> implements IRepo
         return item
     }
 
-    public delete(id: string): boolean {
+    public async delete(id: string): Promise<boolean> {
         if(this.items.has(id)){
             this.items.delete(id)
         }

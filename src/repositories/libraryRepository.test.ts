@@ -9,7 +9,7 @@ import {instance, mock, when} from "ts-mockito";
 
 
 describe("library repository", () => {
-    it("gets libraries via person", () => {1
+    it("gets libraries via person", async () => {
         const personName = new PersonName("Testy", "McTesterson")
         const person = new Person("test", personName, [])
 
@@ -27,7 +27,7 @@ describe("library repository", () => {
         const underTest = new LibraryRepository([instance(mockLib1), instance(mockLib2)])
 
         // act
-        const res = Array.from(underTest.getLibrariesPersonCanUse(person))
+        const res = Array.from(await underTest.getLibrariesPersonCanUse(person))
 
         expect(res).not.toBeNull()
         expect(res.length).toEqual(1)

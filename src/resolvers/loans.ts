@@ -7,17 +7,17 @@ import {
 } from "@meansofproduction/domain";
 import {getRequestedPerson} from "../services/getRequestedPerson.js";
 
-export function loansForPerson(parent, args, context, _info){
-    const user = getRequestedPerson(context, args)
+export async function loansForPerson(parent, args, context, _info){
+    const user = await getRequestedPerson(context, args)
 
     const loanRepository: ILoanRepository = context.loanRepository
     return loanRepository.getLoansForPerson(user)
 }
 
 
-export function loansForLibrary(parent, args, context, _info){
+export async function loansForLibrary(parent, args, context, _info){
     const libraryRepository: ILibraryRepository = context.libraryRepository
-    const library = libraryRepository.get(args.libraryID)
+    const library = await libraryRepository.get(args.libraryID)
     if(!library){
         throw new Error(`No library found for id ${args.libraryID}`)
     }
@@ -26,11 +26,11 @@ export function loansForLibrary(parent, args, context, _info){
     return loanRepository.getLoansForLibrary(library)
 }
 
-export function borrowMutation(_root, args, ctx): ILoan {
-    const person = getRequestedPerson(ctx, args)
+export async function borrowMutation(_root, args, ctx): Promise<ILoan> {
+    const person = await getRequestedPerson(ctx, args)
     const borrowerRepository: IBorrowerRepository = ctx.borrowerRepository
 
-    const borrowers = Array.from(borrowerRepository.getBorrowersForPerson(person)).filter(b => b.library.id == args.libraryID)
+    const borrowers = Array.from(await borrowerRepository.getBorrowersForPerson(person)).filter(b => b.library.id == args.libraryID)
     if (borrowers.length < 1) {
         throw new Error(`${person.toString()} does not have permission to borrow from library ID ${args.libraryID}`)
     }
@@ -45,7 +45,7 @@ export function borrowMutation(_root, args, ctx): ILoan {
 
     const until = args.until ? new DueDate(new Date(Date.parse(args.until))) : new DueDate(null)
 
-    const loan = library.borrow(thing, borrower, until)
+    const loan = await library.borrow(thing, borrower, until)
 
     const loanRepository: ILoanRepository = ctx.loanRepository
     return loanRepository.add(loan)

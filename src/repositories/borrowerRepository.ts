@@ -1,4 +1,4 @@
-import {EntityNotAssignedIdError, IBorrower, IBorrowerRepository, Person, Borrower} from "@meansofproduction/domain"
+import {IBorrower, IBorrowerRepository, Person, Borrower} from "@meansofproduction/domain"
 import {BaseInMemoryRepository} from "./baseInMemoryRepository.js"
 
 export class BorrowerRepository extends BaseInMemoryRepository<IBorrower> implements IBorrowerRepository{
@@ -6,12 +6,14 @@ export class BorrowerRepository extends BaseInMemoryRepository<IBorrower> implem
         super()
     }
 
-    * getBorrowersForPerson(person: Person): Iterable<IBorrower> {
-        for(const borrower of this.getAll()){
+    async getBorrowersForPerson(person: Person): Promise<Iterable<IBorrower>> {
+        const res = []
+        for(const borrower of await this.getAll()){
             if(borrower.person.id == person.id){
-                yield borrower
+                res.push(borrower)
             }
         }
+        return res
     }
 
     protected create(entity: IBorrower): IBorrower {

@@ -28,20 +28,25 @@ export class LoanRepository extends BaseInMemoryRepository<ILoan> implements ILo
         )
     }
 
-    * getLoansForPerson(person: Person): Iterable<ILoan> {
-        for (const loan of this.getAll()) {
+    async getLoansForPerson(person: Person): Promise<Iterable<ILoan>> {
+        const res = []
+        for (const loan of await this.getAll()) {
             if (loan.borrower.person.equals(person)) {
-                yield loan
+                res.push(loan)
             }
         }
+        return res
     }
 
 
-    * getLoansForLibrary(library: ILibrary): Iterable<ILoan> {
-        for(const loan of this.getAll()){
+    async getLoansForLibrary(library: ILibrary): Promise<Iterable<ILoan>> {
+        const res = []
+        for(const loan of await this.getAll()){
             if(loan.borrower.library.id === library.id){
-                yield loan
+                res.push(loan)
             }
         }
+
+        return res
     }
 }

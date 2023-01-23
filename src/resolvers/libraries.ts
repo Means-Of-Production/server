@@ -10,3 +10,7 @@ export function librariesForPerson(parent, args, context, _info){
     const person = getRequestedPerson(context, args)
     return libraryRepository.getLibrariesPersonCanUse(person)
 }
+
+export function addDistributedLibrary(parent, args, context, _info){
+
+}

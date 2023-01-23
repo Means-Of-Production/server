@@ -1,9 +1,9 @@
-import {anything, instance, mock, when} from "ts-mockito"
+import {instance, mock, when} from "ts-mockito"
 import {PersonName, Person, IBorrower, ILibrary, ILoan, ILibraryRepository} from "@meansofproduction/domain"
 import {LoanRepository} from "./loanRepository"
 
 describe("LoanSearchService", () => {
-    it("getLoansForPersonFiltersByBorrower", () => {
+    it("getLoansForPersonFiltersByBorrower", async () => {
         const person: Person = new Person("personId", new PersonName("Testy", "McTesterson"))
         const borrower: IBorrower = mock()
         when(borrower.person).thenReturn(person)
@@ -21,10 +21,10 @@ describe("LoanSearchService", () => {
         when(loan2.borrower).thenReturn(instance(otherBorrower))
 
         const underTest = new LoanRepository(instance(libraryRepository))
-        underTest.add(instance(loan1))
-        underTest.add(instance(loan2))
+        await underTest.add(instance(loan1))
+        await underTest.add(instance(loan2))
 
-        const res = Array.from(underTest.getLoansForPerson(person))
+        const res = Array.from(await underTest.getLoansForPerson(person))
 
         expect(res.length).toEqual(1)
     })

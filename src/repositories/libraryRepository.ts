@@ -19,14 +19,16 @@ export class LibraryRepository extends BaseInMemoryRepository<ILibrary> implemen
         return entity.id
     }
 
-    * getLibrariesPersonCanUse(person: Person): Iterable<ILibrary> {
-        for(const library of this.getAll()){
+    async getLibrariesPersonCanUse(person: Person): Promise<Iterable<ILibrary>> {
+        const res = []
+        for(const library of await this.getAll()){
             for(const borrower of library.borrowers){
                 if(borrower.person.id == person.id){
-                    yield library;
+                    res.push(library)
                 }
             }
         }
+        return res
     }
 
     protected create(entity: ILibrary): ILibrary {
