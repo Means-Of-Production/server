@@ -22,19 +22,26 @@ export function librariesForPerson(parent, args, context, _info){
 }
 
 export async function createDistributedLibrary(parent, args, context: IContext, _info): Promise<ILibrary> {
-    const person = args.existingAdministrator
-        ? await context.personRepository.get(args.existingAdministrator.id)
+    const person = args.library.existingAdministrator
+        ? await context.personRepository.get(args.library.existingAdministrator.id)
         : new Person(
             "",
-            new PersonName(args.existingAdministrator.name.firstName, args.existingAdministrator.name.lastName, args.existingAdministrator.n.middleName),
-            [new EmailAddress(args.existingAdministrator)]
+            new PersonName(
+                args.library.newAdministrator.name.firstName,
+                args.library.newAdministrator.name.lastName,
+                args.library.newAdministrator.name.middleName),
+            [new EmailAddress(args.library.newAdministrator.email)]
         );
 
     const moneyFactory = new MoneyFactory(args.maxFees.currencyName)
 
     const area = new PhysicalArea(
-        new PhysicalLocation(args.location.centerPoint.latitude, args.location.centerPoint.longitude, args.location.centerPoint.address),
-        Distance.fromKilometers(args.location.radius)
+        new PhysicalLocation(
+            args.library.location.centerPoint.latitude,
+            args.library.location.centerPoint.longitude,
+            args.library.location.centerPoint.address
+        ),
+        Distance.fromKilometers(args.library.location.radius)
     )
 
     const library = new DistributedLibrary(
