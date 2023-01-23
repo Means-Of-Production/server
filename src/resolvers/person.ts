@@ -7,11 +7,11 @@ export async function addPerson(parent, args, context: IContext, _info): Promise
     const person = new Person(
         "",
         new PersonName(
-            args.name.firstName,
-            args.name.lastName,
-            args.name.middleName
+            args.person.name.firstName,
+            args.person.name.lastName,
+            args.person.name.middleName
         ),
-        [new EmailAddress(args.email)]
+        [new EmailAddress(args.person.email)]
     )
     return personRepo.add(person)
 }
