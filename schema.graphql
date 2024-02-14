@@ -1,0 +1,206 @@
+#graphql
+
+
+type Borrower {
+  BorrowerVerificationFlags: [BorrowerVerificationFlags]!
+  fees: [LibraryFee]!
+  library: Library!
+  person: Person!
+}
+
+enum BorrowerVerificationFlags {
+  CURRENT_ADDRESS_VERIFIED
+  EMAIL_VERIFIED
+  ID_SCANNED
+  ITEM_RFID_CHIP
+  PHONE_NUMBER
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type DistributedLibrary implements Library {
+  administrator: Person!
+  id: String!
+  items: [Thing]!
+  location: Location!
+  name: String!
+}
+
+type DueDate {
+  date: String
+}
+
+type Email {
+  value: String!
+}
+
+enum FeeStatus {
+  FORGIVEN
+  IN_PAYMENT
+  OUTSTANDING
+  PAID
+}
+
+type Lender {
+  id: String!
+}
+
+interface Library {
+  administrator: Person!
+  id: String!
+  items: [Thing]!
+  location: Location!
+  name: String!
+}
+
+type LibraryFee {
+  amount: Money!
+  chargedFor: Loan!
+  status: FeeStatus!
+}
+
+type LibrarySearchResult {
+  library: Library!
+  things: [Thing]!
+}
+
+type Loan {
+  borrower: Borrower!
+  dateReturned: String
+  dueDate: DueDate!
+  id: String!
+  item: Thing!
+  permanentLoan: Boolean!
+  returnLocation: Location!
+  status: LoanStatus!
+}
+
+enum LoanStatus {
+  BORROWED
+  OVERDUE
+  RETURNED
+  RETURNED_DAMAGED
+  RETURN_STARTED
+  WAITING_ON_LENDER_ACCEPTANCE
+}
+
+union Location = PhysicalArea | PhysicalLocation
+
+enum LocationTypeEnum {
+  Distributed
+  Physical
+  Virtual
+}
+
+type Money {
+  amount: Float!
+  currencyName: String!
+  symbol: String!
+}
+
+type Person {
+  emails: [Email!]!
+  id: String!
+  name: PersonName!
+}
+
+input PersonInput {
+  id: String!
+}
+
+type PersonName {
+  firstName: String!
+  lastName: String!
+  middleName: String
+}
+
+type PhysicalArea {
+  centerPoint: PhysicalLocation!
+  distance: Float!
+}
+
+type PhysicalLocation {
+  apartment: String
+  city: String
+  country: String
+  latitude: String
+  longitude: String
+  state: String
+  streetAddress: String
+  streetName: String
+  zipcode: String
+}
+
+type SimpleLibrary implements Library {
+  administrator: Person!
+  id: String!
+  items: [Thing]!
+  location: Location!
+  name: String!
+}
+
+type Thing {
+  id: String!
+  imageUrls: [String!]!
+  owner: Lender!
+  requiredBorrowerFlags: [BorrowerVerificationFlags!]!
+  status: ThingStatus!
+  storageLocation: Location!
+  title: ThingTitle!
+}
+
+enum ThingStatus {
+  BORROWED
+  DAMAGED
+  READY
+  RESERVED
+}
+
+type ThingTitle {
+  description: String
+  isbn: String
+  name: String!
+  upc: String
+}
+
+input TitleSearchRequest {
+  searchText: String
+}
+
+type TitleSearchResult {
+  libraryResults: [LibrarySearchResult]!
+  title: ThingTitle!
+}
+
+enum UserRoles{
+  LIBRARY_USER,
+  LIBRARY_ADMIN,
+  PLATFORM_ADMIN
+}
+
+type User{
+  email: Email
+  roles: [UserRoles!]
+}
+
+input UserInput {
+  email: String!
+}
+
+type VirtualLocation {
+  url: String
+}
+
+type Query {
+  allLibraries: [Library!]!
+  librariesForPerson(person: PersonInput!): [Library!]!
+  loansForLibrary(hideNonReturn: Boolean, libraryID: String!): [Loan!]!
+  loansForPerson(hideNonReturn: Boolean, person: PersonInput!): [Loan!]!
+  titleSearchResults(personID: String!, searchRequest: TitleSearchRequest): [TitleSearchResult!]!
+  currentUser: User
+}
+
+type Mutation {
+  borrow(libraryID: String!, personID: String!, thingID: String!, until: String): Loan!
+}
